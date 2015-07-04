@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Codeigniter Admin</title>
+	<meta charset="utf-8">
+
+	<!-- jQuery -->
+	<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+	<style>
+		.panel-area h3{
+			margin-bottom: 20px;
+		}
+
+		.panel-header-content{
+			border: 1px solid;
+			border-radius: 3px;
+			font-size: 12pt;
+		}
+
+		.panel-get .panel-header-content{
+			background-color: #DFF0D7;
+			border-color: #d6e9c6;
+		}
+
+		.panel-header-badge{
+			display: inline-block;
+			padding: 10px;
+			color: white;
+			border: 1px solid;
+			border-radius: 3px;
+			margin-right: 10px;
+		}
+
+		.panel-get .panel-header-badge{
+			background-color: black;
+			border-color: #d6e9c6;
+		}
+
+		.panel-head.panel-header-title{
+			
+		}
+
+		.panel-header-type{
+
+		}
+
+		.panel-content{
+			border-radius: 3px;
+			padding: 10px;
+			border: 1px solid #d6e9c6;
+			border-top: 0;
+		}
+
+		.panel-content-wrap{
+			padding: 20px;
+		}
+	</style>
+</head>
+<body>
+	<div id="container">
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="nav-headear">
+					<div class="navbar-header">
+					    <a class="navbar-brand" href="#">
+					    	Codeigniter Admin
+					    </a>
+					</div>
+				</div>
+
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				    <ul class="nav navbar-nav pull-right">
+				    	<li class="active"><a href="#">ALL</a></li>
+				    	<li><a href="#">GET</a></li>
+				        <li><a href="#">POST</a></li>     
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<div id="panel-container" class="container">
+			<section class="panel-area">
+				<h3>Controllers/</h3>
+				<div class="panel-wrap panel-get">
+					<div class="panel-header-content">
+						<div class="panel-header-badge">
+							GET
+						</div>
+						<span class="panel-header-title">
+							Method
+						</span>
+						<span class="panel-header-type pull-right">
+							Add
+						</span>
+					</div>
+					<div class="panel-content">
+						<div class="panel-content-wrap">
+							<kbd>http://localhost.com</kbd>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+</body>
+</html>
