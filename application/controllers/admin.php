@@ -19,50 +19,38 @@ class Admin extends CI_Controller{
 		        if ($entry != "." && $entry != ".." && strpos($entry, ".php") && strpos($dir . $entry, "admin.php") == false) {
 
 		            if ($fp = fopen($dir . '/' . $entry, "r")){
-		            	$fr = fread($fp, filesize($dir . '/' . $entry));
-						
-		            	foreach (explode("function", $fr) as $value) {
-		            		$function_arr = array();
-		            		// echo $value . '</br>';
+		            	$api_list = array();
 
-		            		// Get api method name
-		            		preg_match('/(\w+)\s{0,}\(/', $value, $method_name, PREG_OFFSET_CAPTURE);
-		            		$function_arr['method'] = $method_name[1][0];
-
-		            		// Get api url parameter
-		            		$function_arr['url_parameter'] = array();
-							preg_match("/\((\s{0,}\\\$(\w+)[\s]{0,}\,{0,}[\s]{0,})+\)\{/", $value, $url_parameter, PREG_OFFSET_CAPTURE);
-							if (count($url_parameter)){
-								foreach (explode(',', $url_parameter[0][0]) as $url_parameter_name) {
-									array_push($function_arr['url_parameter'], preg_replace('/\(|\)|\{|\$/', '', $url_parameter_name));
-								}
-							}
-
-							$function_arr['parameter'] = array();
-							preg_match('/(get|post|put|delete)$/', $function_arr['method'], $rest_check);
-							// $parameter_pattern = sprintf('/\$this\s{0,}\-\>\s{0,}%s(get|post|put|delete)\s{0,}(\(\s{0,}\'\s{0,}(\w+)\s{0,}\'\s{0,}\))+/', !count($rest_check) ? 'input\s{0,}\-\>\s{0,}' : '');
-							$parameter_pattern = sprintf('/(?:\$this\s{0,}\-\>\s{0,}%s(?:get|post|put|delete)\s{0,}\(\s{0,}\'(\w+)\'\s{0,}\))/', !count($rest_check) ? 'input\s{0,}\-\>\s{0,}' : '');
-							preg_match_all($parameter_pattern, $value, $parameter);
-							if(count($parameter)){
-								foreach ($parameter[1] as $parameter_value) {
-									// echo $parameter_value . '</br>';		
-									array_push($function_arr['parameter'], $parameter_value);
-								}
-							}
-							// print_r($parameter);
-							// echo $value . '</br>';
-							// echo $parameter_pattern . '</br>';
-
-		            		array_push($controller_list, $function_arr);
+		            	foreach(explode('function', fread($fp, filesize($dir . '/' . $entry))) as $api_str){
+		            		/* Get API Method name */
+		            		preg_match('/\s{0,}(?P<method_name>\w+)\s{0,}\((?P<url_parameter>.*)\)\s{0,}\{(?P<body>.*)\}/s', $api_str, $api_meta_data);
+		            		
+		            		if (count($api_meta_data)){
+		            			/* Get API URL Parameter */
+            					$url_parameter_list = array();
+            					foreach (explode(',', preg_replace('/\$/', '', $api_meta_data['url_parameter'])) as $url_parameter_str) {
+            						array_push($url_parameter_list, $url_parameter_str);
+            					}
+            				 
+            				 	/* Get API Parameter */
+            					preg_match_all("/\\\$this\s{0,}->\s{0,}(?:input\s{0,}->){0,}\s{0,}(get|post|put|delete)\s{0,}\(\s{0,}'(\w+)\'\s{0,}\)/", $api_meta_data['body'], $parameter_list);
+            				
+		            			$api_item = array(
+		            				'method_name' => $api_meta_data['method_name'],
+		            				'url_parameter' => $url_parameter_list,
+		            				'parameter' => count($parameter_list) ? $parameter_list[2] : null,
+		            				'call_type' => count($parameter_list) ? count($parameter_list[1]) ? $parameter_list[1][0] : null : null
+		            			);
+		            			if (count($api_item['parameter'])){
+		            				array_push($api_list, $api_item);
+		            			}
+		            		}
 		            	}
-
 		            	fclose($fp);
 		            }
 		        }
 		    }
 		    closedir($handle);
-
-		    echo json_encode($controller_list);
 		}
 	}
 
