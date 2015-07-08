@@ -49,12 +49,15 @@ class Admin extends CI_Controller{
 				 
 				 	/* Get API Parameter */
 					preg_match_all("/\\\$this\s{0,}->\s{0,}(?:input\s{0,}->){0,}\s{0,}(get|post|put|delete)\s{0,}\(\s{0,}'(\w+)\'\s{0,}\)/", $api_meta_data['body'], $parameter_list);
+
+					preg_match_all("/\\\$this\s{0,}->\s{0,}input\s{0,}->\s{0,}get_request_header\s{0,}\(\s{0,}\'(\w+)\'\s{0,}\)/", $api_meta_data['body'], $header_list);
 				
 	    			$api_item = array(
 	    				'method_name' => $api_meta_data['method_name'],
 	    				'url_parameter' => $url_parameter_list,
 	    				'parameter' => count($parameter_list) ? $parameter_list[2] : null,
-	    				'call_type' => count($parameter_list) ? count($parameter_list[1]) ? $parameter_list[1][0] : null : null
+	    				'call_type' => count($parameter_list) ? count($parameter_list[1]) ? $parameter_list[1][0] : null : null,
+	    				'header' => $header_list[1]
 	    			);
 	    			if (count($api_item['parameter'])){
 	    				array_push($api_list, $api_item);
@@ -63,7 +66,7 @@ class Admin extends CI_Controller{
 	    	}
 	    	fclose($fp);
 	    }
-
+	    
 	    echo json_encode($api_list);
 	}
 }
