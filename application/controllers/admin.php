@@ -1,6 +1,8 @@
 <?php
 
 class Admin extends CI_Controller{
+	const CONTROLLER_DIR = './application/controllers';
+
 	public function __construct(){
 		parent::__construct();
 	}
@@ -50,13 +52,40 @@ class Admin extends CI_Controller{
 		            }
 		        }
 		    }
+		    echo json_encode($api_list);
 		    closedir($handle);
 		}
 	}
 
-	public function test(){
-		$this->_get_api_list ();
+	public function get_file_list(){
+		$file_arr = array();
+
+		if ($handle = opendir(self::CONTROLLER_DIR)) {
+			while (false !== ($entry = readdir($handle))) {
+				if ($entry != "." && $entry != ".." && strpos($entry, ".php") && strpos(self::CONTROLLER_DIR . $entry, "admin.php") == false) {
+					array_push($file_arr, str_replace('.php', '', $entry));
+				}
+			}
+		}
+
+		echo json_encode($file_arr);
 	}
 }
 
 ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
