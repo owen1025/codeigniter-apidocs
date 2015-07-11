@@ -50,6 +50,7 @@ class Admin extends CI_Controller{
 				 	/* Get API Parameter */
 					preg_match_all("/\\\$this\s{0,}->\s{0,}(?:input\s{0,}->){0,}\s{0,}(get|post|put|delete)\s{0,}\(\s{0,}'(\w+)\'\s{0,}\)/", $api_meta_data['body'], $parameter_list);
 
+					/* Get API Headers */
 					preg_match_all("/\\\$this\s{0,}->\s{0,}input\s{0,}->\s{0,}get_request_header\s{0,}\(\s{0,}\'(\w+)\'\s{0,}\)/", $api_meta_data['body'], $header_list);
 				
 	    			$api_item = array(
