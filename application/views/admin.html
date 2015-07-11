@@ -1,114 +1,282 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<title>Codeigniter API Docs</title>
-	<meta charset="utf-8">
+	<meta charset="UTF-8">
+	<title>API Documentation</title>
+
+	<!-- Style -->
+	<link href='http://fonts.googleapis.com/earlyaccess/nanumgothic.css' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet/less" href="../assets/css/color.less">
+	<link rel="stylesheet/less" href="../assets/css/documentation.less">
 
 	<!-- jQuery -->
-	<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+	<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+	<!-- JS -->
+	<script src="..//assets/js/index.js"></script>
+
+	<!-- Less -->
+	<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.1/less.min.js"></script>
 
 	<!-- Bootstrap -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-	<style>
-		.panel-area h3{
-			margin-bottom: 20px;
-		}
-
-		.panel-header-content{
-			border: 1px solid;
-			border-radius: 3px;
-			font-size: 12pt;
-		}
-
-		.panel-get .panel-header-content{
-			background-color: #DFF0D7;
-			border-color: #d6e9c6;
-		}
-
-		.panel-header-badge{
-			color: white;
-			border: 1px solid;
-			border-radius: 3px;
-			margin-right: 10px;
-		}
-
-		.panel-get .panel-header-badge{
-			background-color: black;
-			border-color: #d6e9c6;
-		}
-
-		.panel-head.panel-header-title{
-			
-		}
-
-		.panel-header-type{
-			
-		}
-
-		.panel-header-badge, .panel-header-type{
-			display: inline-block;
-			padding: 10px;
-		}
-
-		.panel-content{
-			border-radius: 3px;
-			padding: 10px;
-			border: 1px solid #d6e9c6;
-			border-top: 0;
-		}
-
-		.panel-content-wrap{
-			padding: 20px;
-		}
-	</style>
+	<!-- jquery.slimscroll -->
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.6/jquery.slimscroll.min.js"></script>
 </head>
 <body>
-	<div id="container">
-		<nav class="navbar navbar-default">
-			<div class="container-fluid">
-				<div class="nav-headear">
-					<div class="navbar-header">
-					    <a class="navbar-brand" href="#">
-					    	Codeigniter API Docs
-					    </a>
-					</div>
-				</div>
-
-				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				    <ul class="nav navbar-nav pull-right">
-				    	<li class="active"><a href="#">ALL</a></li>
-				    	<li><a href="#">GET</a></li>
-				        <li><a href="#">POST</a></li>     
-					</ul>
-				</div>
+	<aside class="sidebar-container">
+		<div class="sidebar-brand-area">
+			<a href="."><img src="../assets/img/brand.png" /></a>
+		</div>
+		<div class="sidebar-menu-area">
+			<div class="sidebar-menu-wrap">
+				<ul>
+					<li class="collection highlight">
+						<div class="block"></div>
+						<label><a href="#">Backend API</a></label>
+						<ol>
+							<li><a href="#">Authentication</a></li>
+							<li class="highlight"><a href="#">Payments</a></li>
+							<li><a href="#">Promotions</a></li>
+							<li><a href="#">Wallet</a></li>
+							<li><a href="#">Coupons</a></li>
+							<li><a href="#">Events</a></li>
+						</ol>
+					</li>
+					<li class="collection">
+						<div class="block"></div>
+						<label><a href="#">CMS API</a></label>
+						<ol>
+							<li><a href="#">Authentication</a></li>
+							<li class="highlight"><a href="#">Payments</a></li>
+							<li><a href="#">Promotions</a></li>
+							<li><a href="#">Wallet</a></li>
+							<li><a href="#">Coupons</a></li>
+							<li><a href="#">Events</a></li>
+						</ol>
+					</li>
+					<li class="collection">
+						<div class="block"></div>
+						<label><a href="#">Mobile API</a></label>
+						<ol>
+							<li><a href="#">Authentication</a></li>
+							<li class="highlight"><a href="#">Payments</a></li>
+							<li><a href="#">Promotions</a></li>
+							<li><a href="#">Wallet</a></li>
+							<li><a href="#">Coupons</a></li>
+							<li><a href="#">Events</a></li>
+						</ol>
+					</li>
+				</ul>
 			</div>
-		</nav>
-		<div id="panel-container" class="container">
-			<section class="panel-area">
-				<h3>Controllers/</h3>
-				<div class="panel-wrap panel-get">
-					<div class="panel-header-content">
-						<div class="panel-header-badge">
-							GET
-						</div>
-						<span class="panel-header-title">
-							Method
-						</span>
-						<div class="panel-header-type pull-right">
-							Add
+		</div>
+	</aside>
+	<div class="main-container">
+		<div class="main-header-area">
+			<h1>Backend API</h1>
+			<h2>Authentication</h2>
+			<blockquote>Vestibulum rutrum quam vitae fringilla tincidunt. Suspendisse nec tortor urna. Ut laoreet sodales nisi, quis iaculis nulla iaculis vitae. Donec sagittis faucibus lacus eget blandit. Mauris vitae ultricies metus, at condimentum nulla.</blockquote>
+			<section class="api-box">
+				<div class="method" data-method="GET"></div>
+				<div class="endpoint">/v2/user/login</div>
+				<div class="header group">
+					<label>Header</label>
+					<div class="row">
+						<div class="col-lg-3"><p class="ico-circle-none"></p>uuid</div>
+						<div class="col-lg-9">
+							<input type="text" value="ac4fe7cd-1c4d-cd462de7-ed356da957c2" />
 						</div>
 					</div>
-					<div class="panel-content">
-						<div class="panel-content-wrap">
-							<kbd>http://localhost.com</kbd>
+					<div class="row">
+						<div class="col-lg-3"><p class="ico-circle-none"></p>datetime</div>
+						<div class="col-lg-9">
+							<input type="text" value="1436089175" />
 						</div>
+					</div>
+				</div>
+				<div class="parameter group">
+					<label>Parameter</label>
+					<div class="row">
+						<div class="col-lg-3"><p class="ico-circle"></p>email</div>
+						<div class="col-lg-9">
+							<input type="text" value="test@test.com" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-3"><p class="ico-circle"></p>password</div>
+						<div class="col-lg-9">
+							<input type="text" value="7c842fdea892c632ced123cfe4b332fd" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-3"><p class="ico-circle-none"></p>datetime</div>
+						<div class="col-lg-9">
+							<input type="text" value="1436089175" />
+						</div>
+					</div>
+				</div>
+				<div class="formdata group">
+					<label>Form Data</label>
+					<div class="row">
+						<div class="col-lg-12">
+							<textarea name="formdata" cols="30" rows="10">
+{
+    "email": "test@test.com",
+    "password": "7c842fdea892c632ced123cfe4b332fd",
+    "datetime": 1436089175
+}</textarea>
+						</div>
+					</div>
+				</div>
+				<div class="tryit row">
+					<div class="col-lg-12">
+						<button type="submit">Try it</button>
+					</div>
+				</div>
+			</section>
+
+			<h2>Payments</h2>
+			<blockquote>Vestibulum rutrum quam vitae fringilla tincidunt. Suspendisse nec tortor urna. Ut laoreet sodales nisi, quis iaculis nulla iaculis vitae. Donec sagittis faucibus lacus eget blandit. Mauris vitae ultricies metus, at condimentum nulla.</blockquote>
+			<section class="api-box">
+				<div class="method" data-method="POST"></div>
+				<div class="endpoint">/v2/user/login</div>
+				<div class="header group">
+					<label>Header</label>
+					<div class="row">
+						<div class="col-lg-3"><p class="ico-circle-none"></p>uuid</div>
+						<div class="col-lg-9">
+							<input type="text" value="ac4fe7cd-1c4d-cd462de7-ed356da957c2" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-3"><p class="ico-circle-none"></p>datetime</div>
+						<div class="col-lg-9">
+							<input type="text" value="1436089175" />
+						</div>
+					</div>
+				</div>
+				<div class="parameter group">
+					<label>Parameter</label>
+					<div class="row">
+						<div class="col-lg-3"><p class="ico-circle"></p>email</div>
+						<div class="col-lg-9">
+							<input type="text" value="test@test.com" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-3"><p class="ico-circle"></p>password</div>
+						<div class="col-lg-9">
+							<input type="text" value="7c842fdea892c632ced123cfe4b332fd" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-3"><p class="ico-circle-none"></p>datetime</div>
+						<div class="col-lg-9">
+							<input type="text" value="1436089175" />
+						</div>
+					</div>
+				</div>
+				<div class="formdata group">
+					<label>Form Data</label>
+					<div class="row">
+						<div class="col-lg-12">
+							<textarea name="formdata" cols="30" rows="10">
+{
+    "email": "test@test.com",
+    "password": "7c842fdea892c632ced123cfe4b332fd",
+    "datetime": 1436089175
+}</textarea>
+						</div>
+					</div>
+				</div>
+				<div class="tryit row">
+					<div class="col-lg-12">
+						<button type="submit">Try it</button>
+					</div>
+				</div>
+			</section>
+
+			<h2>Promotions</h2>
+			<blockquote>Vestibulum rutrum quam vitae fringilla tincidunt. Suspendisse nec tortor urna. Ut laoreet sodales nisi, quis iaculis nulla iaculis vitae. Donec sagittis faucibus lacus eget blandit. Mauris vitae ultricies metus, at condimentum nulla.</blockquote>
+			<section class="api-box">
+				<div class="method" data-method="DELETE"></div>
+				<div class="endpoint">/v2/user/login</div>
+				<div class="header group">
+					<label>Header</label>
+					<div class="row">
+						<div class="col-lg-3"><p class="ico-circle-none"></p>uuid</div>
+						<div class="col-lg-9">
+							<input type="text" value="ac4fe7cd-1c4d-cd462de7-ed356da957c2" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-3"><p class="ico-circle-none"></p>datetime</div>
+						<div class="col-lg-9">
+							<input type="text" value="1436089175" />
+						</div>
+					</div>
+				</div>
+				<div class="parameter group">
+					<label>Parameter</label>
+					<div class="row">
+						<div class="col-lg-3"><p class="ico-circle"></p>email</div>
+						<div class="col-lg-9">
+							<input type="text" value="test@test.com" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-3"><p class="ico-circle"></p>password</div>
+						<div class="col-lg-9">
+							<input type="text" value="7c842fdea892c632ced123cfe4b332fd" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-3"><p class="ico-circle-none"></p>datetime</div>
+						<div class="col-lg-9">
+							<input type="text" value="1436089175" />
+						</div>
+					</div>
+				</div>
+				<div class="formdata group">
+					<label>Form Data</label>
+					<div class="row">
+						<div class="col-lg-12">
+							<textarea name="formdata" cols="30" rows="10">
+{
+    "email": "test@test.com",
+    "password": "7c842fdea892c632ced123cfe4b332fd",
+    "datetime": 1436089175
+}</textarea>
+						</div>
+					</div>
+				</div>
+				<div class="tryit row">
+					<div class="col-lg-12">
+						<button type="submit">Try it</button>
 					</div>
 				</div>
 			</section>
 		</div>
+		<div class="content-area">
+			<div class="content-header-area row">
+				
+			</div>
+			<div class="content-body-area row">
+				
+			</div>
+		</div>
 	</div>
+
+	<script type="text/javascript">
+		$(function() {
+			$('.sidebar-menu-wrap').slimScroll({
+		        height: '100%'
+		    });
+		});
+	</script>
 </body>
 </html>

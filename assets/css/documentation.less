@@ -1,0 +1,253 @@
+@charset "utf-8";
+
+@import url('./color.less');
+
+@size-sidebar: 310px;
+@side-brand-height: round(@size-sidebar * 0.322580645);
+
+* {
+	margin: 0;
+}
+
+body {
+	min-width: 960px;
+	background-color: @color-background !important;
+}
+
+.sidebar-container {
+	position: fixed;
+	width: @size-sidebar;
+	height: 100%;
+	background-color: @color-sidebar-background;
+	overflow: hidden;
+
+	.sidebar-brand-area img {
+		width: @size-sidebar;
+		height: @side-brand-height;
+	}
+	.sidebar-menu-area {
+		height: 100%;
+		padding-bottom: @side-brand-height; 
+
+		.sidebar-menu-wrap {
+			height: 100%;
+
+			ul {
+				display: block;
+				list-style: none;
+				padding: 0;
+
+				>li {
+					margin: 10px 0;
+					min-height: 32px;
+					padding: 6px 20px;
+					display: block;
+
+					>.block {
+						float: left;
+						margin-left: -20px;
+						margin-top: -6px;
+						width: 4px;
+						height: 32px;
+					}
+
+					label > a {
+						color: @color-menu-normal;
+						font-family: 'Nanum Gothic', san-serif;
+						font-weight: 700;
+						font-size: 16px;
+						margin: 0;
+						text-decoration: none;
+					}
+
+					ol {
+						display: none;
+					}
+				}
+				>li:first-child {
+					margin-top: 27px;
+				}
+				>li.highlight {
+
+					>.block {
+						background-color: @color-menu-highlight;
+					}
+
+					label {
+						color: @color-menu-highlight;
+					}
+
+					ol {
+						display: block;
+						list-style: none;
+						margin: 10px 0 0 16px;
+						padding: 0;
+
+						li {
+							padding: 5px;
+							height: 32px;
+							a {
+								font-family: 'Nanum Gothic', san-serif;
+								font-weight: 400;
+								color: @color-text-gray;
+								text-decoration: none;
+							}
+						}
+						li.highlight {
+							a { color: @color-text-white; text-decoration: none; }
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.main-container {
+	margin-left: @size-sidebar;
+
+	.main-header-area {
+		padding: 50px;
+
+		h1 {
+			font-family: 'Nanum Gothic', san-serif;
+			font-weight: 700;
+			font-size: 32px;
+			padding-bottom: 22px;
+			border-bottom: 1px @color-border solid;
+			color: @color-text-dark;
+		}
+		h2 {
+			margin: 40px 3px 8px 3px;
+			font-family: 'Nanum Gothic', san-serif;
+			font-weight: 700;
+			font-size: 22px;
+			color: @color-text-semidark;
+		}
+		blockquote {
+			margin: 0 3px 12px 3px;
+			padding: 8px 14px;
+			border-left: 4px @color-text-lightgray solid;
+			color: @color-text-gray;
+		}
+		section.api-box {
+			margin: 12px 3px 0 3px;
+			border: 1px @color-border-opacity solid;
+
+			.method:before {
+				font-family: 'Nanum Gothic', san-serif;
+				font-weight: 400;
+				font-size: 18px;
+				text-align: center;
+				color: @color-text-white;
+				content: attr(data-method);
+			}
+			.method[data-method='GET'] { background-color: @color-method-get; }
+			.method[data-method='POST'] { background-color: @color-method-post; }
+			.method[data-method='DELETE'] { background-color: @color-method-delete; }
+			.method[data-method='UPDATE'] { background-color: @color-method-update; }
+			.method {
+				float: left;
+				text-align: center;
+				width: 82px;
+				height: 30px;
+				padding-top: 1px;
+			}
+			.endpoint {
+				height: 30px;
+				font-family: 'Nanum Gothic', san-serif;
+				font-weight: 400;
+				font-size: 14px;
+				padding: 4px 10px 0 92px;
+				background-color: @color-background-gray;
+			}
+
+			.group {
+				margin: 12px 14px 16px 14px;
+
+				label {
+					margin: 0;
+					padding-bottom: 6px;
+					font-family: 'Nanum Gothic', san-serif;
+					font-weight: 400;
+					font-size: 14px;
+					color: @color-text-semidark;
+				}
+				label+div {
+					border-top: 1px @color-text-lightgray solid;
+				}
+				div.row {
+					height: 28px;
+					margin: 0;
+
+					div {
+						font-family: 'Nanum Gothic', san-serif;
+						font-weight: 400;
+						font-size: 14px;
+						padding: 0 8px;
+						margin-top: 3px;
+						color: @color-text-semidark;
+
+						p {
+							float: left;
+							width: 6px;
+							height: 6px;
+							margin: 8px 6px 0 0;
+						}
+						p.ico-circle-none {
+							border-radius: 3px;
+							border: 1px @color-highlight solid;
+						}
+						p.ico-circle {
+							border-radius: 3px;
+							background-color: @color-highlight;
+						}
+
+						input, textarea {
+							font-family: 'Nanum Gothic', san-serif;
+							font-weight: 400;
+							font-size: 12px;
+							display:block;
+							margin-top: -1px;
+							padding: auto 4px;
+							width: 100%;
+							height: 24px;
+							border-radius: 3px;
+							border: 1px @color-border-opacity solid;
+						}
+						textarea {
+							font-family: 'Source Code Pro';
+							height: 100px;
+						}
+					}
+					div:first-child {
+						padding-top: 2px;
+					}
+				}
+			}
+
+			.tryit > div {
+				margin: 10px;
+				text-align: center;
+
+				button {
+					font-family: 'Nanum Gothic', san-serif;
+					font-weight: 400;
+					font-size: 14px;
+					width: 140px;
+					height: 26px;
+					border: 0;
+					border-radius: 3px;
+					background-color: @color-text-semidark;
+					color: @color-text-white;
+
+					transition: 0.35s all;
+					-webkit-transition: 0.35s all;
+				}
+				button:hover {
+					background-color: @color-sidebar-background;
+				}
+			}
+		}
+	}
+}
