@@ -35,231 +35,94 @@
 		<div class="sidebar-menu-area">
 			<div class="sidebar-menu-wrap">
 				<ul>
-					<li class="collection highlight">
-						<div class="block"></div>
-						<label><a href="#">Backend API</a></label>
-						<ol>
-							<li><a href="#">Authentication</a></li>
-							<li class="highlight"><a href="#">Payments</a></li>
-							<li><a href="#">Promotions</a></li>
-							<li><a href="#">Wallet</a></li>
-							<li><a href="#">Coupons</a></li>
-							<li><a href="#">Events</a></li>
-						</ol>
-					</li>
-					<li class="collection">
-						<div class="block"></div>
-						<label><a href="#">CMS API</a></label>
-						<ol>
-							<li><a href="#">Authentication</a></li>
-							<li class="highlight"><a href="#">Payments</a></li>
-							<li><a href="#">Promotions</a></li>
-							<li><a href="#">Wallet</a></li>
-							<li><a href="#">Coupons</a></li>
-							<li><a href="#">Events</a></li>
-						</ol>
-					</li>
-					<li class="collection">
-						<div class="block"></div>
-						<label><a href="#">Mobile API</a></label>
-						<ol>
-							<li><a href="#">Authentication</a></li>
-							<li class="highlight"><a href="#">Payments</a></li>
-							<li><a href="#">Promotions</a></li>
-							<li><a href="#">Wallet</a></li>
-							<li><a href="#">Coupons</a></li>
-							<li><a href="#">Events</a></li>
-						</ol>
-					</li>
+					<?php $highlight_flag = true; ?>
+					<?php foreach ($api_list as $index => $api_value): ?>
+						<li class="collection <?php if ($highlight_flag) { $highlight_flag = false; echo 'highlight'; } ?>">
+							<div class="block"></div>
+							<label><a href="#"><?= $index ?></a></label>
+							<ol>
+								<?php foreach ($api_value as $method_index => $api_method_name): ?>
+									<li class="<?php if (!$method_index) echo 'highlight'; ?>"><a href="#"><?= $api_method_name; ?></a></li>
+								<?php endforeach;?>
+							</ol>
+						</li>
+					<?php endforeach;?>
 				</ul>
 			</div>
 		</div>
 	</aside>
 	<div class="main-container">
 		<div class="main-header-area">
-			<h1>Backend API</h1>
-			<h2>Authentication</h2>
-			<blockquote>Vestibulum rutrum quam vitae fringilla tincidunt. Suspendisse nec tortor urna. Ut laoreet sodales nisi, quis iaculis nulla iaculis vitae. Donec sagittis faucibus lacus eget blandit. Mauris vitae ultricies metus, at condimentum nulla.</blockquote>
-			<section class="api-box">
-				<div class="method" data-method="GET"></div>
-				<div class="endpoint">/v2/user/login</div>
-				<div class="header group">
-					<label>Header</label>
-					<div class="row">
-						<div class="col-lg-3"><p class="ico-circle-none"></p>uuid</div>
-						<div class="col-lg-9">
-							<input type="text" value="ac4fe7cd-1c4d-cd462de7-ed356da957c2" />
-						</div>
+			<h1><?= $first_controller ?></h1>
+			<? foreach ($api_detail as $api_item): ?>
+				<h2><?= $api_item['method_name']; ?></h2>
+				<blockquote>Vestibulum rutrum quam vitae fringilla tincidunt. Suspendisse nec tortor urna. Ut laoreet sodales nisi, quis iaculis nulla iaculis vitae. Donec sagittis faucibus lacus eget blandit. Mauris vitae ultricies metus, at condimentum nulla.</blockquote>
+				<section class="api-box">
+					<div class="method" data-method="<?= strtoupper($api_item['call_type']) ?>"></div>
+					<div class="endpoint">
+						<?php $url_parameter_str = ''; foreach($api_item['url_parameter'] as $url_parameter_item) $url_parameter_str .= '/' . '{' . $url_parameter_item . '}'; ?>
+						<?= $base_url . $api_item['method_name'] . ($url_parameter_str != '/' ? $url_parameter_str : '') ?>
 					</div>
-					<div class="row">
-						<div class="col-lg-3"><p class="ico-circle-none"></p>datetime</div>
-						<div class="col-lg-9">
-							<input type="text" value="1436089175" />
-						</div>
+					<div class="urlparameter group">
+						<?php if (count($api_item['url_parameter'])) { ?>
+							<label>URL Parameter</label>
+							<?php foreach($api_item['url_parameter'] as $url_parameter_item): ?>
+								<div class="row">
+									<div class="col-lg-3"><p class="ico-circle-none"></p><?= '{' . $url_parameter_item . '}' ?></div>
+									<div class="col-lg-9">
+										<input type="text" value="" />
+									</div>
+								</div>
+							<?php endforeach; ?>
+						<?php } ?>
 					</div>
-				</div>
-				<div class="parameter group">
-					<label>Parameter</label>
-					<div class="row">
-						<div class="col-lg-3"><p class="ico-circle"></p>email</div>
-						<div class="col-lg-9">
-							<input type="text" value="test@test.com" />
-						</div>
+					<div class="header group">
+						<?php if (count($api_item['header'])) { ?>
+							<label>Header</label>
+							<?php foreach($api_item['header'] as $header_item): ?>
+								<div class="row">
+									<div class="col-lg-3"><p class="ico-circle-none"></p><?= $header_item ?></div>
+									<div class="col-lg-9">
+										<input type="text" value="" />
+									</div>
+								</div>
+							<?php endforeach; ?>
+						<?php } ?>
 					</div>
-					<div class="row">
-						<div class="col-lg-3"><p class="ico-circle"></p>password</div>
-						<div class="col-lg-9">
-							<input type="text" value="7c842fdea892c632ced123cfe4b332fd" />
-						</div>
+					<div class="parameter group">
+						<?php if (count($api_item['parameter'])) { ?>
+							<label>Parameter</label>
+							<?php foreach($api_item['parameter'] as $parameter_item): ?>
+								<div class="row">
+									<div class="col-lg-3"><p class="ico-circle"></p><?= $parameter_item ?></div>
+									<div class="col-lg-9">
+										<input type="text" value="test@test.com" />
+									</div>
+								</div>
+							<?php endforeach; ?>
+						<?php } ?>
 					</div>
-					<div class="row">
-						<div class="col-lg-3"><p class="ico-circle-none"></p>datetime</div>
-						<div class="col-lg-9">
-							<input type="text" value="1436089175" />
-						</div>
-					</div>
-				</div>
-				<div class="formdata group">
-					<label>Form Data</label>
-					<div class="row">
-						<div class="col-lg-12">
-							<textarea name="formdata" cols="30" rows="10">
+					<div class="formdata group">
+						<label>Form Data</label>
+						<div class="row">
+							<div class="col-lg-12">
+								<textarea name="formdata" cols="30" rows="10">
 {
     "email": "test@test.com",
     "password": "7c842fdea892c632ced123cfe4b332fd",
     "datetime": 1436089175
-}</textarea>
+}
+								</textarea>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="tryit row">
-					<div class="col-lg-12">
-						<button type="submit">Try it</button>
-					</div>
-				</div>
-			</section>
-
-			<h2>Payments</h2>
-			<blockquote>Vestibulum rutrum quam vitae fringilla tincidunt. Suspendisse nec tortor urna. Ut laoreet sodales nisi, quis iaculis nulla iaculis vitae. Donec sagittis faucibus lacus eget blandit. Mauris vitae ultricies metus, at condimentum nulla.</blockquote>
-			<section class="api-box">
-				<div class="method" data-method="POST"></div>
-				<div class="endpoint">/v2/user/login</div>
-				<div class="header group">
-					<label>Header</label>
-					<div class="row">
-						<div class="col-lg-3"><p class="ico-circle-none"></p>uuid</div>
-						<div class="col-lg-9">
-							<input type="text" value="ac4fe7cd-1c4d-cd462de7-ed356da957c2" />
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-3"><p class="ico-circle-none"></p>datetime</div>
-						<div class="col-lg-9">
-							<input type="text" value="1436089175" />
-						</div>
-					</div>
-				</div>
-				<div class="parameter group">
-					<label>Parameter</label>
-					<div class="row">
-						<div class="col-lg-3"><p class="ico-circle"></p>email</div>
-						<div class="col-lg-9">
-							<input type="text" value="test@test.com" />
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-3"><p class="ico-circle"></p>password</div>
-						<div class="col-lg-9">
-							<input type="text" value="7c842fdea892c632ced123cfe4b332fd" />
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-3"><p class="ico-circle-none"></p>datetime</div>
-						<div class="col-lg-9">
-							<input type="text" value="1436089175" />
-						</div>
-					</div>
-				</div>
-				<div class="formdata group">
-					<label>Form Data</label>
-					<div class="row">
+					<div class="tryit row">
 						<div class="col-lg-12">
-							<textarea name="formdata" cols="30" rows="10">
-{
-    "email": "test@test.com",
-    "password": "7c842fdea892c632ced123cfe4b332fd",
-    "datetime": 1436089175
-}</textarea>
+							<button type="submit">Try it</button>
 						</div>
 					</div>
-				</div>
-				<div class="tryit row">
-					<div class="col-lg-12">
-						<button type="submit">Try it</button>
-					</div>
-				</div>
-			</section>
-
-			<h2>Promotions</h2>
-			<blockquote>Vestibulum rutrum quam vitae fringilla tincidunt. Suspendisse nec tortor urna. Ut laoreet sodales nisi, quis iaculis nulla iaculis vitae. Donec sagittis faucibus lacus eget blandit. Mauris vitae ultricies metus, at condimentum nulla.</blockquote>
-			<section class="api-box">
-				<div class="method" data-method="DELETE"></div>
-				<div class="endpoint">/v2/user/login</div>
-				<div class="header group">
-					<label>Header</label>
-					<div class="row">
-						<div class="col-lg-3"><p class="ico-circle-none"></p>uuid</div>
-						<div class="col-lg-9">
-							<input type="text" value="ac4fe7cd-1c4d-cd462de7-ed356da957c2" />
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-3"><p class="ico-circle-none"></p>datetime</div>
-						<div class="col-lg-9">
-							<input type="text" value="1436089175" />
-						</div>
-					</div>
-				</div>
-				<div class="parameter group">
-					<label>Parameter</label>
-					<div class="row">
-						<div class="col-lg-3"><p class="ico-circle"></p>email</div>
-						<div class="col-lg-9">
-							<input type="text" value="test@test.com" />
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-3"><p class="ico-circle"></p>password</div>
-						<div class="col-lg-9">
-							<input type="text" value="7c842fdea892c632ced123cfe4b332fd" />
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-3"><p class="ico-circle-none"></p>datetime</div>
-						<div class="col-lg-9">
-							<input type="text" value="1436089175" />
-						</div>
-					</div>
-				</div>
-				<div class="formdata group">
-					<label>Form Data</label>
-					<div class="row">
-						<div class="col-lg-12">
-							<textarea name="formdata" cols="30" rows="10">
-{
-    "email": "test@test.com",
-    "password": "7c842fdea892c632ced123cfe4b332fd",
-    "datetime": 1436089175
-}</textarea>
-						</div>
-					</div>
-				</div>
-				<div class="tryit row">
-					<div class="col-lg-12">
-						<button type="submit">Try it</button>
-					</div>
-				</div>
-			</section>
+				</section>
+			<?php endforeach; ?>
 		</div>
 		<div class="content-area">
 			<div class="content-header-area row">
