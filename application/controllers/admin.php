@@ -5,13 +5,25 @@ class Admin extends CI_Controller{
 
 	public function __construct(){
 		parent::__construct();
+
+		$this->load->helper('url');
 	}
 
 	public function index(){
-		$this->load->view('admin.html');
+		$api_list = $this->_get_api_list();
+		$first_controller = key($api_list);
+
+		$view_data = array(
+			'base_url' => preg_replace('/admin$/', '', current_url()),
+			'first_controller' => $first_controller,
+			'api_list' => $api_list,
+			'api_detail' => $this->get_api_detail($first_controller)
+		);
+		
+		$this->load->view('admin.html', $view_data);
 	}
 
-	public function get_api_list(){
+	private function _get_api_list(){
 		$file_arr = array();
 
 		/* Open your_project/application/controllers directory */
@@ -28,8 +40,8 @@ class Admin extends CI_Controller{
 			}
 			closedir($handle);
 		}
-
-		echo json_encode($file_arr);
+		
+		return $file_arr;
 	}
 
 	public function get_api_detail($file_name){
@@ -43,8 +55,9 @@ class Admin extends CI_Controller{
 	    		if (count($api_meta_data)){
 	    			/* Get API URL Parameter */
 					$url_parameter_list = array();
-					foreach (explode(',', preg_replace('/\$/', '', $api_meta_data['url_parameter'])) as $url_parameter_str) {
-						array_push($url_parameter_list, $url_parameter_str);
+					foreach (explode(',', preg_replace(array('/\$/', '/\s/'), array('', ''), $api_meta_data['url_parameter'])) as $url_parameter_str) {
+						if ($url_parameter_str != '')
+							array_push($url_parameter_list, $url_parameter_str);
 					}
 				 
 				 	/* Get API Parameter */
@@ -68,7 +81,7 @@ class Admin extends CI_Controller{
 	    	fclose($fp);
 	    }
 	    
-	    echo json_encode($api_list);
+	    return $api_list;
 	}
 }
 
