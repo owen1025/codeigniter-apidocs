@@ -42,7 +42,7 @@ class Admin extends CI_Controller{
 	}
 
 	private function _get_api_list(){
-		$file_arr = array();
+		$controller_arr = array();
 
 		/* Open your_project/application/controllers directory */
 		if ($handle = opendir(self::CONTROLLER_DIR)) {
@@ -51,19 +51,19 @@ class Admin extends CI_Controller{
 					$controller_name = explode('.php', $entry)[0];
 					$api_str = $this->_get_controller_source($controller_name);
 
-					$file_arr[$controller_name] = array();
+					$controller_arr[$controller_name] = array();
 					preg_match_all('/public function (?P<method_name>\w+)/', $api_str, $method_list);
 					foreach($method_list['method_name'] as $method_value){
 						/* Private method check */
 						if (!$this->_private_method_check($method_value))
-							array_push($file_arr[$controller_name], $method_value);
+							array_push($controller_arr[$controller_name], $method_value);
 					}
 				}
 			}
 			closedir($handle);
 		}
 		
-		return $file_arr;
+		return $controller_arr;
 	}
 
 	public function get_api_detail($file_name){
@@ -94,7 +94,7 @@ class Admin extends CI_Controller{
     				'method_name' => $api_meta_data['method_name'],
     				'url_parameter' => $url_parameter_list,
     				'parameter' => count($parameter_list) ? $parameter_list[2] : null,
-    				'call_type' => count($parameter_list) ? count($parameter_list[1]) ? $parameter_list[1][0] : null : null,
+    				'call_type' => count($parameter_list) ? count($parameter_list[1]) ? $parameter_list[1][0] : 'GET' : 'GET',
     				'header' => $header_list[1]
     			);
 
