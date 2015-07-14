@@ -46,20 +46,22 @@ $(document).ready(function(){
 		}
 
 		if (call_type != 'GET'){
-			ajax_config['data'] = ''
-			$.each(api_parent.find('.parameter').children('.row'), function(index, parameter_row){
-				var _parameter_div = $(parameter_row).children('div')
-				ajax_config['data'] += (index ? '&' : '') + _parameter_div.eq(0).text() +
-					'=' + _parameter_div.eq(1).children('input[type="text"]').val()
-			})
-			console.log(ajax_config['data'])
+			ajax_config['data'] = ajax_data_binding(api_parent, 'parameter')
+			ajax_config['header'] = ajax_data_binding(api_parent, 'header')
 		}
 		
 		$.ajax(ajax_config)		
 	})
 })
 
-
+function ajax_data_binding(api_parent, group_name){
+	var data_str = {}
+	$.each(api_parent.find('.' + group_name).children('.row'), function(index, row){
+		var row_div = $(row).children('div')
+		data_str[row_div.eq(0).text()] = row_div.eq(1).children('input[type="text"]').val()
+	})
+	return data_str
+}
 
 
 
