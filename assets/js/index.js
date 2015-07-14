@@ -16,24 +16,58 @@ $(document).ready(function(){
 
 	$('button[type="submit"]').click(function(){
 		var api_parent = $(this).parents('section')
+		var call_type = api_parent.find('.method').attr('data-method')
 
 		var ajax_config = {
-			'url' : function(){
-				var url = 'test'
+			type : call_type,
+			url : function(){
+				var url = api_parent.find('.endpoint').text().replace(/\s/g, '')
 
-				$.each(api_parent.children('.parameter').children('.row'), function(index, row_val){
-					$.each($(row_val).children('div'), function(div_index, div_val){
-						var input_dom = $(div_val).children('input[type="text"]')
-						var parameter_val = input_dom.val()
-						if (parameter_val != undefined){
-							url += (index ? '&' : '?') + input_dom.parent().siblings('div').text() + '=' + parameter_val
-						}
+				if (call_type == 'GET'){
+					$.each(api_parent.children('.parameter').children('.row'), function(index, row_val){
+						$.each($(row_val).children('div'), function(div_index, div_val){
+							var input_dom = $(div_val).children('input[type="text"]')
+							var parameter_val = input_dom.val()
+							if (parameter_val != undefined){
+								url += (index ? '&' : '?') + input_dom.parent().siblings('div').text() + '=' + parameter_val
+							}
+						})
 					})
-				})
-				console.log(url)
-			}()
+				}
+
+				return url
+			}(),
+			success : function(data){
+				alert(data)
+			},
+			complete : function(){
+				// alert(123)
+			}
+		}
+
+		if (call_type != 'GET'){
+			ajax_config['data'] = ''
+			$.each(api_parent.find('.parameter').children('.row'), function(index, parameter_row){
+				var _parameter_div = $(parameter_row).children('div')
+				ajax_config['data'] += (index ? '&' : '') + _parameter_div.eq(0).text() +
+					'=' + _parameter_div.eq(1).children('input[type="text"]').val()
+			})
+			console.log(ajax_config['data'])
 		}
 		
 		$.ajax(ajax_config)		
 	})
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
