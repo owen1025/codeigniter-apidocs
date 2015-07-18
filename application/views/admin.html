@@ -54,7 +54,7 @@
 	<div class="main-container">
 		<div class="main-header-area">
 			<h1><?= $first_controller ?></h1>
-			<? foreach ($api_detail as $api_item): ?>
+			<?php foreach ($api_detail as $api_item): ?>
 				<h2><?= $api_item['method_name']; ?></h2>
 				<blockquote>Vestibulum rutrum quam vitae fringilla tincidunt. Suspendisse nec tortor urna. Ut laoreet sodales nisi, quis iaculis nulla iaculis vitae. Donec sagittis faucibus lacus eget blandit. Mauris vitae ultricies metus, at condimentum nulla.</blockquote>
 				<section class="api-box">
@@ -102,20 +102,6 @@
 							<?php endforeach; ?>
 						<?php } ?>
 					</div>
-					<div class="formdata group">
-						<label>Form Data</label>
-						<div class="row">
-							<div class="col-lg-12">
-								<textarea name="formdata" cols="30" rows="10">
-{
-    "email": "test@test.com",
-    "password": "7c842fdea892c632ced123cfe4b332fd",
-    "datetime": 1436089175
-}
-								</textarea>
-							</div>
-						</div>
-					</div>
 					<div class="tryit row">
 						<div class="col-lg-12">
 							<button type="submit">Try it</button>
@@ -133,6 +119,10 @@
 			</div>
 		</div>
 	</div>
+
+	<footer class="footer-container">
+		
+	</footer>
 
 	<script type="text/javascript">
 		$(function() {
