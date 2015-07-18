@@ -115,7 +115,67 @@ function ajax_data_binding(api_parent, group_name){
 	return data_str
 }
 
+function parse_code_block(){
+	$("pre.code-wrap").each(function(){
+		if ($(this).hasClass("highlighter"))
+			return;
 
+		var data = $(this).html();
+
+		// cross-hatch
+		var crosshatch = /^(#[\s]{1,}GET|POST|DELETE|UPDATE)([\s]{1,})([\S]+)([\s]{1,})([\S]+\/[\S]+)$/gm;
+		data = data.replace(crosshatch, "<span class='cross-hatch'>$1</span>$2<span class='url'>$3</span>$4<span class='cross-hatch'>$5</span>");
+
+		// spacial-charactor
+		var spacialcharactor = /^(\?)([\s]{1,})([\S]+=)([\S]+)$/gm;
+		data = data.replace(spacialcharactor, "<span class='spacial-charactor'>$1</span>$2<span class='parameter-key'>$3</span><span class='parameter-value'>$4</span>");
+
+		// header
+		var header = /^(\+)([\s]{1,})([\S]+:)[\s]{1,}([\S]+)$/gm;
+		data = data.replace(header, "<span class='spacial-charactor'>$1</span>$2<span class='header-key'>$3</span><span class='header-value'>$4</span>");
+
+		// brackets
+		var brackets = /({|}|\(|\)|\[|\])/gm;
+		data = data.replace(brackets, "<span class='brackets'>$1</span>");
+
+		// numbers | strings
+		var m;
+		var lastindex = 0;
+		var newdata = "";
+		var numberstrings = /(("[ \t\S]+")|('[ \t\S]+')|([\d]+)){0,1}(:)([\s]{1,})((("[ \t\S]+")|('[ \t\S]+')|([\d]+))){0,1}/gm;
+		while ((m = numberstrings.exec(data)) !== null) {
+			if (m.index === numberstrings.lastIndex) {
+		        re.lastIndex++;
+		    }
+
+		    newdata += data.substr(lastindex, m.index - lastindex);
+
+			if (m[4])
+				newdata += "<span class='number'>" + m[1] + m[5] + "</span>";
+			else
+				newdata += "<span class='string'>" + m[1] + m[5] + "</span>";
+
+			newdata += m[6];
+
+			if (m[7]) {
+				if (m[11])
+					newdata += "<span class='number'>" + m[8] + "</span>";
+				else
+					newdata += "<span class='string'>" + m[8] + "</span>";
+
+				lastindex = m.index + m[0].length;
+			} else {
+				lastindex = m.index + m[0].length;
+			}
+		}
+		data = newdata + data.substr(lastindex, data.length - lastindex)
+
+		data = data.replace(/(,)/gm, "<span class='brackets'>$1</span>");
+
+		$(this).addClass("highlighter");
+		$(this).html(data);
+	});
+}
 
 
 
