@@ -134,43 +134,72 @@ function parse_code_block(){
 		var header = /^(\+)([\s]{1,})([\S]+:)[\s]{1,}([\S]+)$/gm;
 		data = data.replace(header, "<span class='spacial-charactor'>$1</span>$2<span class='header-key'>$3</span><span class='header-value'>$4</span>");
 
-		// brackets
-		var brackets = /({|}|\(|\)|\[|\])/gm;
-		data = data.replace(brackets, "<span class='brackets'>$1</span>");
+		// JSON
+		if (data.indexOf("xml") === -1) {
+			$(".response .description").html("json response");
 
-		// numbers | strings
-		var m;
-		var lastindex = 0;
-		var newdata = "";
-		var numberstrings = /(("[ \t\S]+")|('[ \t\S]+')|([\d]+)){0,1}(:)([\s]{1,})((("[ \t\S]+")|('[ \t\S]+')|([\d]+))){0,1}/gm;
-		while ((m = numberstrings.exec(data)) !== null) {
-			if (m.index === numberstrings.lastIndex) {
-		        re.lastIndex++;
-		    }
+			// brackets
+			var brackets = /({|}|\(|\)|\[|\])/gm;
+			data = data.replace(brackets, "<span class='brackets'>$1</span>");
 
-		    newdata += data.substr(lastindex, m.index - lastindex);
+			// numbers | strings
+			var m;
+			var lastindex = 0;
+			var newdata = "";
+			var numberstrings = /(("[ \t\S]+")|('[ \t\S]+')|([\d]+)){0,1}(:)([\s]{1,})((("[ \t\S]+")|('[ \t\S]+')|([\d]+))){0,1}/gm;
+			while ((m = numberstrings.exec(data)) !== null) {
+				if (m.index === numberstrings.lastIndex) {
+			        numberstrings.lastIndex++;
+			    }
 
-			if (m[4])
-				newdata += "<span class='number'>" + m[1] + m[5] + "</span>";
-			else
-				newdata += "<span class='string'>" + m[1] + m[5] + "</span>";
+			    newdata += data.substr(lastindex, m.index - lastindex);
 
-			newdata += m[6];
-
-			if (m[7]) {
-				if (m[11])
-					newdata += "<span class='number'>" + m[8] + "</span>";
+				if (m[4])
+					newdata += "<span class='number'>" + m[1] + m[5] + "</span>";
 				else
-					newdata += "<span class='string'>" + m[8] + "</span>";
+					newdata += "<span class='string'>" + m[1] + m[5] + "</span>";
 
-				lastindex = m.index + m[0].length;
-			} else {
+				newdata += m[6];
+
+				if (m[7]) {
+					if (m[11])
+						newdata += "<span class='number'>" + m[8] + "</span>";
+					else
+						newdata += "<span class='string'>" + m[8] + "</span>";
+
+					lastindex = m.index + m[0].length;
+				} else {
+					lastindex = m.index + m[0].length;
+				}
+			}
+			data = newdata + data.substr(lastindex, data.length - lastindex)
+			data = data.replace(/(,)/gm, "<span class='brackets'>$1</span>");
+		} else {
+			$(".response .description").html("xml response");
+
+			data = _.unescape(data);
+
+			var m;
+			var lastindex = 0;
+			var newdata = "";
+			var xml = /(<)([\/|?]{0,})([^>\s]+)(([\s]+[^>\s]+)*)(>)/gm;
+			while ((m = xml.exec(data)) !== null) {
+				if (m.index === xml.lastIndex) {
+					xml.lastIndex++;
+				}
+
+				newdata += "<span class='xml-content'>" + data.substr(lastindex, m.index - lastindex) + "</span>";
+
+				if (m[2] === '?') {
+					newdata += "<span class='xml-block'>" + _.escape(m[0]) + "</span>";
+				} else {
+					newdata += "<span class='xml-tag-block'>" + _.escape(m[1] + m[2] + m[3]) + "</span>" + m[4].replace(/([\w]+=)(('[\w]')|("[\w]+"))/g, "<span class='xml-field'>$1</span><span class='number'>$2</span>") + "<span class='xml-tag-block'>" + _.escape(m[6]) + "</span>";
+				}
+
 				lastindex = m.index + m[0].length;
 			}
+			data = newdata + "<span class='xml-content'>" + data.substr(lastindex, data.length - lastindex) + "</span>";
 		}
-		data = newdata + data.substr(lastindex, data.length - lastindex)
-
-		data = data.replace(/(,)/gm, "<span class='brackets'>$1</span>");
 
 		$(this).addClass("highlighter");
 		$(this).html(data);
