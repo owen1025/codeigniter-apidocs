@@ -39,10 +39,10 @@
 					<?php foreach ($api_list as $index => $api_value): ?>
 						<li class="collection <?php if ($highlight_flag) { $highlight_flag = false; echo 'highlight'; } ?>">
 							<div class="block"></div>
-							<label><a href="#"><?= $index ?></a></label>
+							<label><a><?= $index ?></a></label>
 							<ol>
 								<?php foreach ($api_value as $method_index => $api_method_name): ?>
-									<li class="<?php if (!$method_index) echo 'highlight'; ?>"><a href="#"><?= $api_method_name; ?></a></li>
+									<li class="<?php if (!$method_index) echo 'highlight'; ?>"><a><?= $api_method_name; ?></a></li>
 								<?php endforeach;?>
 							</ol>
 						</li>
@@ -54,74 +54,76 @@
 	<div class="main-container">
 		<div class="main-header-area">
 			<h1><?= $first_controller ?></h1>
-			<? foreach ($api_detail as $api_item): ?>
-				<h2><?= $api_item['method_name']; ?></h2>
-				<blockquote>Vestibulum rutrum quam vitae fringilla tincidunt. Suspendisse nec tortor urna. Ut laoreet sodales nisi, quis iaculis nulla iaculis vitae. Donec sagittis faucibus lacus eget blandit. Mauris vitae ultricies metus, at condimentum nulla.</blockquote>
-				<section class="api-box">
-					<div class="method" data-method="<?= strtoupper($api_item['call_type']) ?>"></div>
-					<div class="endpoint">
-						<?php $url_parameter_str = ''; foreach($api_item['url_parameter'] as $url_parameter_item) $url_parameter_str .= '/' . '{' . $url_parameter_item . '}'; ?>
-						<?= $base_url . $api_item['method_name'] . ($url_parameter_str != '/' ? $url_parameter_str : '') ?>
-					</div>
-					<div class="urlparameter group">
-						<?php if (count($api_item['url_parameter'])) { ?>
-							<label>URL Parameter</label>
-							<?php foreach($api_item['url_parameter'] as $url_parameter_item): ?>
-								<div class="row">
-									<div class="col-lg-3"><p class="ico-circle-none"></p><?= '{' . $url_parameter_item . '}' ?></div>
-									<div class="col-lg-9">
-										<input type="text" value="" />
+			<? foreach ($api_detail['item'] as $api_item): ?>
+				<div class="api-wrap <?= $api_item['method_name']; ?>">
+					<h2 class="method-name"><?= $api_item['method_name']; ?></h2>
+					<blockquote>Vestibulum rutrum quam vitae fringilla tincidunt. Suspendisse nec tortor urna. Ut laoreet sodales nisi, quis iaculis nulla iaculis vitae. Donec sagittis faucibus lacus eget blandit. Mauris vitae ultricies metus, at condimentum nulla.</blockquote>
+					<section class="api-box">
+						<div class="method" data-method="<?= strtoupper($api_item['call_type']) ?>"></div>
+						<div class="endpoint">
+							<?php $url_parameter_str = ''; foreach($api_item['url_parameter'] as $url_parameter_item) $url_parameter_str .= '/{' . $url_parameter_item . '}'; ?>
+							<?= $api_detail['base_url'] . $first_controller . '/' . $api_item['method_name'] . ($url_parameter_str != '/' ? $url_parameter_str : '') ?>
+						</div>
+						<div class="urlparameter group">
+							<?php if (count($api_item['url_parameter'])) { ?>
+								<label>URL Parameter</label>
+								<?php foreach($api_item['url_parameter'] as $url_parameter_item): ?>
+									<div class="row">
+										<div class="col-lg-3"><p class="ico-circle-none"></p><?= '{' . $url_parameter_item . '}' ?></div>
+										<div class="col-lg-9">
+											<input type="text" value="" />
+										</div>
 									</div>
-								</div>
-							<?php endforeach; ?>
-						<?php } ?>
-					</div>
-					<div class="header group">
-						<?php if (count($api_item['header'])) { ?>
-							<label>Header</label>
-							<?php foreach($api_item['header'] as $header_item): ?>
-								<div class="row">
-									<div class="col-lg-3"><p class="ico-circle-none"></p><?= $header_item ?></div>
-									<div class="col-lg-9">
-										<input type="text" value="" />
+								<?php endforeach; ?>
+							<?php } ?>
+						</div>
+						<div class="header group">
+							<?php if (count($api_item['header'])) { ?>
+								<label>Header</label>
+								<?php foreach($api_item['header'] as $header_item): ?>
+									<div class="row">
+										<div class="col-lg-3"><p class="ico-circle-none"></p><?= $header_item ?></div>
+										<div class="col-lg-9">
+											<input type="text" value="" />
+										</div>
 									</div>
-								</div>
-							<?php endforeach; ?>
-						<?php } ?>
-					</div>
-					<div class="parameter group">
-						<?php if (count($api_item['parameter'])) { ?>
-							<label>Parameter</label>
-							<?php foreach($api_item['parameter'] as $parameter_item): ?>
-								<div class="row">
-									<div class="col-lg-3"><p class="ico-circle"></p><?= $parameter_item ?></div>
-									<div class="col-lg-9">
-										<input type="text" value="test@test.com" />
+								<?php endforeach; ?>
+							<?php } ?>
+						</div>
+						<div class="parameter group">
+							<?php if (count($api_item['parameter'])) { ?>
+								<label>Parameter</label>
+								<?php foreach($api_item['parameter'] as $parameter_item): ?>
+									<div class="row">
+										<div class="col-lg-3"><p class="ico-circle"></p><?= $parameter_item ?></div>
+										<div class="col-lg-9">
+											<input type="text" value="" />
+										</div>
 									</div>
-								</div>
-							<?php endforeach; ?>
-						<?php } ?>
-					</div>
-					<div class="formdata group">
-						<label>Form Data</label>
-						<div class="row">
-							<div class="col-lg-12">
-								<textarea name="formdata" cols="30" rows="10">
+								<?php endforeach; ?>
+							<?php } ?>
+						</div>
+						<div class="formdata group">
+							<label>Form Data</label>
+							<div class="row">
+								<div class="col-lg-12">
+									<textarea name="formdata" cols="30" rows="10">
 {
     "email": "test@test.com",
     "password": "7c842fdea892c632ced123cfe4b332fd",
     "datetime": 1436089175
 }
-								</textarea>
+									</textarea>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="tryit row">
-						<div class="col-lg-12">
-							<button type="submit">Try it</button>
+						<div class="tryit row">
+							<div class="col-lg-12">
+								<button type="submit">Try it</button>
+							</div>
 						</div>
-					</div>
-				</section>
+					</section>
+				</div>
 			<?php endforeach; ?>
 		</div>
 		<div class="content-area">
