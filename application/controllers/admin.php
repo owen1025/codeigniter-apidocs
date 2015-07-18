@@ -14,10 +14,9 @@ class Admin extends CI_Controller{
 		$first_controller = key($api_list);
 
 		$view_data = array(
-			'base_url' => preg_replace('/admin$/', '', current_url()),
 			'first_controller' => $first_controller,
 			'api_list' => $api_list,
-			'api_detail' => $this->get_api_detail($first_controller)
+			'api_detail' => $this->get_api_detail($first_controller, false)
 		);
 		
 		$this->load->view('admin.html', $view_data);
@@ -66,8 +65,11 @@ class Admin extends CI_Controller{
 		return $controller_arr;
 	}
 
-	public function get_api_detail($file_name){
-		$api_list = array();
+	public function get_api_detail($file_name, $external_call_flag = true){
+		$api_list = array(
+			'base_url' => preg_replace('/admin$/', '', current_url()),
+			'item' => array()
+		);
 
     	foreach(explode('function', $this->_get_controller_source($file_name)) as $api_str){
     		/* Get API Method name */
@@ -98,11 +100,14 @@ class Admin extends CI_Controller{
     				'header' => $header_list[1]
     			);
 
-    			array_push($api_list, $api_item);
+    			array_push($api_list['item'], $api_item);
     		}
     	}
 	    
-	    return $api_list;
+	    if ($external_call_flag == true)
+	    	echo json_encode($api_list);
+	    else
+	    	return $api_list;
 	}
 }
 

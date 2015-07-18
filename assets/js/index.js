@@ -1,4 +1,35 @@
+const SCROLL_Y_CONTROL = 50
+
 $(document).ready(function(){
+	$('.highlight ol li').click(function(event){
+		event.preventDefault()
+
+		var _this = $(this);
+		$('html, body').stop(true).animate({
+			scrollTop: $('.' + _this.text()).offset().top - SCROLL_Y_CONTROL
+		}, 500);
+
+		$('.highlight ol .highlight').removeClass('highlight')
+		_this.addClass('highlight')
+	})
+
+	$('li.collection').click(function(){
+		var _this = $(this);
+
+		if (_this.attr('class').indexOf('highlight') <= -1){
+			$('li.collection.highlight').removeClass('highlight')
+			_this.addClass('highlight')
+
+			$.ajax({
+				url : document.URL + '/get_api_detail/' + _this.find('label a').text(),
+				type : 'GET',
+				success : function(data){
+					json_data_convert_tag(data)
+				}
+			})
+		}
+	})
+
 	$('.api-box .urlparameter input[type="text"]').focusout(function(){
 		var _this = $(this)
 		var input_index = _this.parents('.urlparameter').find('input[type="text"]').index(_this)
@@ -47,12 +78,33 @@ $(document).ready(function(){
 
 		if (call_type != 'GET'){
 			ajax_config['data'] = ajax_data_binding(api_parent, 'parameter')
-			ajax_config['header'] = ajax_data_binding(api_parent, 'header')
+			ajax_config['headers'] = ajax_data_binding(api_parent, 'header')
 		}
 		
 		$.ajax(ajax_config)		
 	})
 })
+
+function json_data_convert_tag(controller_name, data){
+	var api_data = JSON.parse(data)
+	var tag_str = ''
+	// api_data.item.forEach(function(element, index){
+	// 	tag_str += '<div class="api-wrap ' + element.method_name + '">' +
+	// 		'<h2 class="method-name">' + element.method_name + '</h2>' +
+	// 		'<blockquote>Vestibulum rutrum quam vitae fringilla tincidunt. Suspendisse nec tortor urna. Ut laoreet sodales nisi, quis iaculis nulla iaculis vitae. Donec sagittis faucibus lacus eget blandit. Mauris vitae ultricies metus, at condimentum nulla.</blockquote>' +
+	// 		'<section class="api-box">' +
+	// 			'<div class="method" data-method="element.call_type.toUpperCase()' + '"></div>' +
+	// 			'<div class="endpoint">';
+
+	// 	var api_url = ''
+	// 	element.url_parameter.forEach(function(urlparameter_item, urlparameter_index){
+	// 		api_url += '/{' + urlparameter_item + '}'
+	// 	})
+
+	// 	tag_str += api_data.base_url + '/' + controller_name + api_url
+	// })
+	console.log(tag_str)
+}
 
 function ajax_data_binding(api_parent, group_name){
 	var data_str = {}
@@ -63,7 +115,67 @@ function ajax_data_binding(api_parent, group_name){
 	return data_str
 }
 
+function parse_code_block(){
+	$("pre.code-wrap").each(function(){
+		if ($(this).hasClass("highlighter"))
+			return;
 
+		var data = $(this).html();
+
+		// cross-hatch
+		var crosshatch = /^(#[\s]{1,}GET|POST|DELETE|UPDATE)([\s]{1,})([\S]+)([\s]{1,})([\S]+\/[\S]+)$/gm;
+		data = data.replace(crosshatch, "<span class='cross-hatch'>$1</span>$2<span class='url'>$3</span>$4<span class='cross-hatch'>$5</span>");
+
+		// spacial-charactor
+		var spacialcharactor = /^(\?)([\s]{1,})([\S]+=)([\S]+)$/gm;
+		data = data.replace(spacialcharactor, "<span class='spacial-charactor'>$1</span>$2<span class='parameter-key'>$3</span><span class='parameter-value'>$4</span>");
+
+		// header
+		var header = /^(\+)([\s]{1,})([\S]+:)[\s]{1,}([\S]+)$/gm;
+		data = data.replace(header, "<span class='spacial-charactor'>$1</span>$2<span class='header-key'>$3</span><span class='header-value'>$4</span>");
+
+		// brackets
+		var brackets = /({|}|\(|\)|\[|\])/gm;
+		data = data.replace(brackets, "<span class='brackets'>$1</span>");
+
+		// numbers | strings
+		var m;
+		var lastindex = 0;
+		var newdata = "";
+		var numberstrings = /(("[ \t\S]+")|('[ \t\S]+')|([\d]+)){0,1}(:)([\s]{1,})((("[ \t\S]+")|('[ \t\S]+')|([\d]+))){0,1}/gm;
+		while ((m = numberstrings.exec(data)) !== null) {
+			if (m.index === numberstrings.lastIndex) {
+		        re.lastIndex++;
+		    }
+
+		    newdata += data.substr(lastindex, m.index - lastindex);
+
+			if (m[4])
+				newdata += "<span class='number'>" + m[1] + m[5] + "</span>";
+			else
+				newdata += "<span class='string'>" + m[1] + m[5] + "</span>";
+
+			newdata += m[6];
+
+			if (m[7]) {
+				if (m[11])
+					newdata += "<span class='number'>" + m[8] + "</span>";
+				else
+					newdata += "<span class='string'>" + m[8] + "</span>";
+
+				lastindex = m.index + m[0].length;
+			} else {
+				lastindex = m.index + m[0].length;
+			}
+		}
+		data = newdata + data.substr(lastindex, data.length - lastindex)
+
+		data = data.replace(/(,)/gm, "<span class='brackets'>$1</span>");
+
+		$(this).addClass("highlighter");
+		$(this).html(data);
+	});
+}
 
 
 

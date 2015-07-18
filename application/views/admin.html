@@ -27,7 +27,7 @@
 	<!-- jquery.slimscroll -->
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.6/jquery.slimscroll.min.js"></script>
 </head>
-<body>
+<body class="console-active">
 	<aside class="sidebar-container">
 		<div class="sidebar-brand-area">
 			<a href="."><img src="../assets/img/brand.png" /></a>
@@ -39,10 +39,10 @@
 					<?php foreach ($api_list as $index => $api_value): ?>
 						<li class="collection <?php if ($highlight_flag) { $highlight_flag = false; echo 'highlight'; } ?>">
 							<div class="block"></div>
-							<label><a href="#"><?= $index ?></a></label>
+							<label><a><?= $index ?></a></label>
 							<ol>
 								<?php foreach ($api_value as $method_index => $api_method_name): ?>
-									<li class="<?php if (!$method_index) echo 'highlight'; ?>"><a href="#"><?= $api_method_name; ?></a></li>
+									<li class="<?php if (!$method_index) echo 'highlight'; ?>"><a><?= $api_method_name; ?></a></li>
 								<?php endforeach;?>
 							</ol>
 						</li>
@@ -54,74 +54,112 @@
 	<div class="main-container">
 		<div class="main-header-area">
 			<h1><?= $first_controller ?></h1>
-			<?php foreach ($api_detail as $api_item): ?>
-				<h2><?= $api_item['method_name']; ?></h2>
-				<blockquote>Vestibulum rutrum quam vitae fringilla tincidunt. Suspendisse nec tortor urna. Ut laoreet sodales nisi, quis iaculis nulla iaculis vitae. Donec sagittis faucibus lacus eget blandit. Mauris vitae ultricies metus, at condimentum nulla.</blockquote>
-				<section class="api-box">
-					<div class="method" data-method="<?= strtoupper($api_item['call_type']) ?>"></div>
-					<div class="endpoint">
-						<?php $url_parameter_str = ''; foreach($api_item['url_parameter'] as $url_parameter_item) $url_parameter_str .= '/' . '{' . $url_parameter_item . '}'; ?>
-						<?= $base_url . $api_item['method_name'] . ($url_parameter_str != '/' ? $url_parameter_str : '') ?>
-					</div>
-					<div class="urlparameter group">
-						<?php if (count($api_item['url_parameter'])) { ?>
-							<label>URL Parameter</label>
-							<?php foreach($api_item['url_parameter'] as $url_parameter_item): ?>
-								<div class="row">
-									<div class="col-lg-3"><p class="ico-circle-none"></p><?= '{' . $url_parameter_item . '}' ?></div>
-									<div class="col-lg-9">
-										<input type="text" value="" />
-									</div>
-								</div>
-							<?php endforeach; ?>
-						<?php } ?>
-					</div>
-					<div class="header group">
-						<?php if (count($api_item['header'])) { ?>
-							<label>Header</label>
-							<?php foreach($api_item['header'] as $header_item): ?>
-								<div class="row">
-									<div class="col-lg-3"><p class="ico-circle-none"></p><?= $header_item ?></div>
-									<div class="col-lg-9">
-										<input type="text" value="" />
-									</div>
-								</div>
-							<?php endforeach; ?>
-						<?php } ?>
-					</div>
-					<div class="parameter group">
-						<?php if (count($api_item['parameter'])) { ?>
-							<label>Parameter</label>
-							<?php foreach($api_item['parameter'] as $parameter_item): ?>
-								<div class="row">
-									<div class="col-lg-3"><p class="ico-circle"></p><?= $parameter_item ?></div>
-									<div class="col-lg-9">
-										<input type="text" value="test@test.com" />
-									</div>
-								</div>
-							<?php endforeach; ?>
-						<?php } ?>
-					</div>
-					<div class="tryit row">
-						<div class="col-lg-12">
-							<button type="submit">Try it</button>
+			<?php foreach ($api_detail['item'] as $api_item): ?>
+				<div class="api-wrap <?= $api_item['method_name']; ?>">
+					<h2 class="method-name"><?= $api_item['method_name']; ?></h2>
+					<blockquote>Vestibulum rutrum quam vitae fringilla tincidunt. Suspendisse nec tortor urna. Ut laoreet sodales nisi, quis iaculis nulla iaculis vitae. Donec sagittis faucibus lacus eget blandit. Mauris vitae ultricies metus, at condimentum nulla.</blockquote>
+					<section class="api-box">
+						<div class="method" data-method="<?= strtoupper($api_item['call_type']) ?>"></div>
+						<div class="endpoint">
+							<?php $url_parameter_str = ''; foreach($api_item['url_parameter'] as $url_parameter_item) $url_parameter_str .= '/{' . $url_parameter_item . '}'; ?>
+							<?= $api_detail['base_url'] . $first_controller . '/' . $api_item['method_name'] . ($url_parameter_str != '/' ? $url_parameter_str : '') ?>
 						</div>
-					</div>
-				</section>
+						<?php if (count($api_item['url_parameter'])) { ?>
+							<div class="urlparameter group">
+								<label>URL Parameter</label>
+								<?php foreach($api_item['url_parameter'] as $url_parameter_item): ?>
+									<div class="row">
+										<div class="col-lg-3"><p class="ico-circle-none"></p><?= '{' . $url_parameter_item . '}' ?></div>
+										<div class="col-lg-9">
+											<input type="text" value="" />
+										</div>
+									</div>
+								<?php endforeach; ?>
+							</div>
+						<?php } ?>
+						<?php if (count($api_item['header'])) { ?>
+							<div class="header group">
+								<label>Header</label>
+								<?php foreach($api_item['header'] as $header_item): ?>
+									<div class="row">
+										<div class="col-lg-3"><p class="ico-circle-none"></p><?= $header_item ?></div>
+										<div class="col-lg-9">
+											<input type="text" value="" />
+										</div>
+									</div>
+								<?php endforeach; ?>
+							</div>
+						<?php } ?>
+						<?php if (count($api_item['parameter'])) { ?>
+							<div class="parameter group">
+								<label>Parameter</label>
+								<?php foreach($api_item['parameter'] as $parameter_item): ?>
+									<div class="row">
+										<div class="col-lg-3"><p class="ico-circle"></p><?= $parameter_item ?></div>
+										<div class="col-lg-9">
+											<input type="text" value="" />
+										</div>
+									</div>
+								<?php endforeach; ?>
+							</div>
+						<?php } ?>
+						<div class="tryit row">
+							<div class="col-lg-12">
+								<button type="submit">Try it</button>
+							</div>
+						</div>
+					</section>
+				</div>
 			<?php endforeach; ?>
-		</div>
-		<div class="content-area">
-			<div class="content-header-area row">
-				
-			</div>
-			<div class="content-body-area row">
-				
-			</div>
 		</div>
 	</div>
 
 	<footer class="footer-container">
-		
+		<div class="footer-header-area">
+			<label>Request Console</label>
+			<a href="#">
+				<p class="ico-close"></p>
+			</a>
+		</div>
+		<div class="footer-content-area row">
+			<div class="code-area request col-md-6">
+				<div class="description">api request</div>
+				<pre class="code-wrap">
+# GET http://www.pikicast.com/v2/user/login/ HTTP/1.1
+? uuid=ac4fe7cd-1c4d-cd462de7-ed356da957c2
+? datetime=1436089175
+
++ User-Agent: codeigniter-docs-client/1.0
++ Host: api.codeigniterdocs.io
++ Content-Type: application/json
++ Access-Token: 64c673d65ade34e5d51d9601f50f2ec2
+				</pre>
+			</div>
+			<div class="code-area response col-md-6">
+				<div class="description">json response</div>
+				<pre class="code-wrap">
+{
+    "accessToken": "mUiLOqHvj3mg+b5bFlf0Tgu63YV4B5HWr5fq53c9r+3tJID5aZRZcBX2Sv1n+GsfxlOUOm2fV4qzmgBHYRUMrl5G1iHvot6j9KxEywqALDzb2P20Sbl7zTKHixObC42jx9DwoK/Zi5wTGMG3CRh80t3d8XwAGgxlRwN90OeJ4NiucGm6RIN1KDANUtcVMNyzU=",
+    "user": {
+        "createdAt": 1420088967475,
+        "id": "54a4d6876e0bf91700c7871b",
+        "lastLogin": 1420088967475,
+        "pagId": 1420087957375241,
+        "updatedAt": 1420088967594
+    },
+    "userAuths": (
+        {
+            "id": "54a4d6876e0bf91700c7871c",
+            "pagId": 1420088967545703,
+            "type": "guest",
+            "uid": "e63e41ff9ff602bab23acef9d111910d",
+            "user": "54a4d6876e0bf91700c7871b"
+        }
+    )
+}
+				</pre>
+			</div>
+		</div>
 	</footer>
 
 	<script type="text/javascript">
@@ -129,6 +167,11 @@
 			$('.sidebar-menu-wrap').slimScroll({
 		        height: '100%'
 		    });
+		    $('.code-wrap').slimScroll({
+		    	height: '356px'
+		    });
+
+		    parse_code_block();
 		});
 	</script>
 </body>
