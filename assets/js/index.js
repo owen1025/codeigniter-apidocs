@@ -122,6 +122,8 @@ function parse_code_block(){
 
 		var data = $(this).html();
 
+		data = _.unescape(data).trim();
+
 		// cross-hatch
 		var crosshatch = /^(#[\s]{1,}GET|POST|DELETE|UPDATE)([\s]{1,})([\S]+)([\s]{1,})([\S]+\/[\S]+)$/gm;
 		data = data.replace(crosshatch, "<span class='cross-hatch'>$1</span>$2<span class='url'>$3</span>$4<span class='cross-hatch'>$5</span>");
@@ -134,8 +136,22 @@ function parse_code_block(){
 		var header = /^(\+)([\s]{1,})([\S]+:)[\s]{1,}([\S]+)$/gm;
 		data = data.replace(header, "<span class='spacial-charactor'>$1</span>$2<span class='header-key'>$3</span><span class='header-value'>$4</span>");
 
+		// Query Param
+		var newlength = 0;
+		var queryParam = /(((&){0,1}[\w]+=)([\w]+))/gm;
+		while ((m = queryParam.exec(data)) !== null) {
+			if (m.index === queryParam.lastIndex)
+				queryParam.lastIndex ++;
+			newlength += m[1].length;
+		}
+
+		if (data.length == newlength) {
+			$(".response .description").html("query response");
+
+			data = data.replace(queryParam, "<span class='query-key'>$2</span><span class='query-value'>$4</span>");
+
 		// JSON
-		if (data.indexOf("xml") === -1) {
+		} else if (data.indexOf("<?xml") === -1 && data.indexOf("<? xml") === -1) {
 			$(".response .description").html("json response");
 
 			// brackets
@@ -174,10 +190,10 @@ function parse_code_block(){
 			}
 			data = newdata + data.substr(lastindex, data.length - lastindex)
 			data = data.replace(/(,)/gm, "<span class='brackets'>$1</span>");
+
+		// XML
 		} else {
 			$(".response .description").html("xml response");
-
-			data = _.unescape(data);
 
 			var m;
 			var lastindex = 0;
