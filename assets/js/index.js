@@ -204,8 +204,8 @@ function parse_code_block(){
 		data = _.unescape(data).trim();
 
 		// cross-hatch
-		var crosshatch = /^(#[\s]{1,}GET|POST|DELETE|UPDATE)([\s]{1,})([\S]+)([\s]{1,})([\S]+\/[\S]+)$/gm;
-		data = data.replace(crosshatch, "<span class='cross-hatch'>$1</span>$2<span class='url'>$3</span>$4<span class='cross-hatch'>$5</span>");
+		var crosshatch = /^(#[\s]{1,}GET|POST|DELETE|UPDATE)([\s]{1,})([\S]+)$/gm;
+		data = data.replace(crosshatch, "<span class='cross-hatch'>$1</span>$2<span class='url'>$3</span>");
 
 		// spacial-charactor
 		var spacialcharactor = /^(\?)([\s]{1,})([\S]+=)([\S]+)$/gm;
