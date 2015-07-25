@@ -30,7 +30,7 @@ $(document).ready(function(){
 		}
 	})
 
-	$('.api-box .urlparameter input[type="text"]').focusout(function(){
+	$(document).on('keydown', '.api-box .urlparameter input[type="text"]', function(){
 		var _this = $(this)
 		var input_index = _this.parents('.urlparameter').find('input[type="text"]').index(_this)
 		var url_val = _this.parents('.group').siblings('.endpoint')
@@ -45,7 +45,7 @@ $(document).ready(function(){
 		url_val.text(split_url[0])
 	})
 
-	$('button[type="submit"]').on('click', function(){
+	$(document).on('click', 'button[type="submit"]', function(){
 		var api_parent = $(this).parents('section')
 		var call_type = api_parent.find('.method').attr('data-method')
 
@@ -69,7 +69,11 @@ $(document).ready(function(){
 				return url
 			}(),
 			success : function(data){
-				alert(data)
+				var codewrap = $(".response pre.code-wrap")
+				codewrap.html(_.escape(data))
+				codewrap.removeClass('highlighter')
+				parse_code_block()
+				$('body').addClass('console-active')
 			},
 			complete : function(){
 				// alert(123)
@@ -81,7 +85,7 @@ $(document).ready(function(){
 			ajax_config['headers'] = ajax_data_binding(api_parent, 'header')
 		}
 		
-		$.ajax(ajax_config)		
+		$.ajax(ajax_config)
 	})
 })
 
@@ -163,7 +167,7 @@ function json_data_convert_tag(controller_name, data){
 						'</section>' +
 				   '</div>'
 	})
-	console.log(tag_str)
+	
 	parent_tag.append(tag_str)
 }
 
