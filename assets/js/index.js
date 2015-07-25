@@ -68,21 +68,31 @@ $(document).ready(function(){
 
 				return url
 			}(),
-			success : function(data){
-				var codewrap = $(".response pre.code-wrap")
-				codewrap.html(_.escape(data))
-				codewrap.removeClass('highlighter')
-				parse_code_block()
-				$('body').addClass('console-active')
-			},
-			complete : function(){
-				// alert(123)
-			}
+			// success: function(data, textStatus, request){
+
+
+			// 	// var codewrap = $(".response pre.code-wrap")
+			// 	// codewrap.html(_.escape(data))
+			// 	// codewrap.removeClass('highlighter')
+			// 	// parse_code_block()
+			// 	// $('body').addClass('console-active')
+			// },
+			// complete : function(){
+			// 	// alert(123)
+			// }
 		}
 
 		if (call_type != 'GET'){
 			ajax_config['data'] = ajax_data_binding(api_parent, 'parameter')
 			ajax_config['headers'] = ajax_data_binding(api_parent, 'header')
+		}
+
+		ajax_config['success'] = function(data){
+			var request_header_str = '# ' + call_type + ' ' + ajax_config['url']
+			$('.request .code-wrap').text(request_header_str)
+			$(".request pre.code-wrap").removeClass('highlighter')
+			parse_code_block()
+			$('body').addClass('console-active')
 		}
 		
 		$.ajax(ajax_config)
@@ -290,7 +300,6 @@ function parse_code_block(){
 		$(this).html(data);
 	});
 }
-
 
 
 
