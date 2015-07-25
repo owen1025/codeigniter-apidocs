@@ -24,13 +24,13 @@ $(document).ready(function(){
 				url : document.URL + '/get_api_detail/' + _this.find('label a').text(),
 				type : 'GET',
 				success : function(data){
-					json_data_convert_tag(data)
+					json_data_convert_tag(_this.find('label a').text(), data)
 				}
 			})
 		}
 	})
 
-	$('.api-box .urlparameter input[type="text"]').focusout(function(){
+	$(document).on('keydown', '.api-box .urlparameter input[type="text"]', function(){
 		var _this = $(this)
 		var input_index = _this.parents('.urlparameter').find('input[type="text"]').index(_this)
 		var url_val = _this.parents('.group').siblings('.endpoint')
@@ -45,7 +45,7 @@ $(document).ready(function(){
 		url_val.text(split_url[0])
 	})
 
-	$('button[type="submit"]').click(function(){
+	$(document).on('click', 'button[type="submit"]', function(){
 		var api_parent = $(this).parents('section')
 		var call_type = api_parent.find('.method').attr('data-method')
 
@@ -69,7 +69,11 @@ $(document).ready(function(){
 				return url
 			}(),
 			success : function(data){
-				alert(data)
+				var codewrap = $(".response pre.code-wrap")
+				codewrap.html(_.escape(data))
+				codewrap.removeClass('highlighter')
+				parse_code_block()
+				$('body').addClass('console-active')
 			},
 			complete : function(){
 				// alert(123)
@@ -81,29 +85,94 @@ $(document).ready(function(){
 			ajax_config['headers'] = ajax_data_binding(api_parent, 'header')
 		}
 		
-		$.ajax(ajax_config)		
+		$.ajax(ajax_config)
+	})
+
+	$('.footer-header-area').click(function(){
+		$('body').removeClass('console-active')
 	})
 })
 
 function json_data_convert_tag(controller_name, data){
+	var parent_tag = $('.main-header-area')
 	var api_data = JSON.parse(data)
 	var tag_str = ''
-	// api_data.item.forEach(function(element, index){
-	// 	tag_str += '<div class="api-wrap ' + element.method_name + '">' +
-	// 		'<h2 class="method-name">' + element.method_name + '</h2>' +
-	// 		'<blockquote>Vestibulum rutrum quam vitae fringilla tincidunt. Suspendisse nec tortor urna. Ut laoreet sodales nisi, quis iaculis nulla iaculis vitae. Donec sagittis faucibus lacus eget blandit. Mauris vitae ultricies metus, at condimentum nulla.</blockquote>' +
-	// 		'<section class="api-box">' +
-	// 			'<div class="method" data-method="element.call_type.toUpperCase()' + '"></div>' +
-	// 			'<div class="endpoint">';
 
-	// 	var api_url = ''
-	// 	element.url_parameter.forEach(function(urlparameter_item, urlparameter_index){
-	// 		api_url += '/{' + urlparameter_item + '}'
-	// 	})
+	api_data.item.forEach(function(api_val, index){
+		if (!index){
+			parent_tag.empty()
+			tag_str += '<h1>' + controller_name + '</h1>'
+		}
 
-	// 	tag_str += api_data.base_url + '/' + controller_name + api_url
-	// })
-	console.log(tag_str)
+		tag_str += '<div class="api-wrap ' + api_val.method_name + '?>">' +
+						'<h2 class="method-name">' + api_val.method_name + '</h2>' +
+						'<blockquote>Vestibulum rutrum quam vitae fringilla tincidunt. Suspendisse nec tortor urna. Ut laoreet sodales nisi, quis iaculis nulla iaculis vitae. Donec sagittis faucibus lacus eget blandit. Mauris vitae ultricies metus, at condimentum nulla.</blockquote>' +
+						'<section class="api-box">' +
+							'<div class="method" data-method="' + api_val.call_type.toUpperCase() + '"></div>' +
+							'<div class="endpoint">';
+
+		url_parameter_str = ''
+		api_val.url_parameter.forEach(function(urlparameter, index){
+			url_parameter_str += '/{' + urlparameter + '}'
+		})
+
+		tag_str +=				api_data.base_url + controller_name + '/' + api_val.method_name + (url_parameter_str != '/' ? url_parameter_str : '') +
+							'</div>'
+		
+		if (api_val.url_parameter.length){
+			tag_str += 		'<div class="urlparameter group">' +
+								'<label>URL Parameter</label>' 
+			api_val.url_parameter.forEach(function(parameter_val, index){
+				tag_str +=		'<div class="row">' +
+									'<div class="col-lg-3"><p class="ico-circle-none"></p>{' + parameter_val + '}</div>' +
+									'<div class="col-lg-9">' +
+										'<input type="text" value="" />' +
+									'</div>' +
+								'</div>'
+			})
+			tag_str +=		'</div>'
+		}
+
+		if (api_val.header.length){
+			tag_str += 		'<div class="header group">' +
+								'<label>Header</label>' 
+			api_val.header.forEach(function(header_val, index){
+				tag_str +=		'<div class="row">' +
+									'<div class="col-lg-3"><p class="ico-circle-none"></p>{' + header_val + '}</div>' +
+									'<div class="col-lg-9">' +
+										'<input type="text" value="" />' +
+									'</div>' +
+								'</div>'
+			})
+			tag_str +=		'</div>'
+		}
+
+		if (api_val.parameter.length){
+			tag_str += 		'<div class="parameter group">' +
+								'<label>Parameter</label>' 
+			api_val.parameter.forEach(function(parameter_val, index){
+				tag_str +=		'<div class="row">' +
+									'<div class="col-lg-3"><p class="ico-circle-none"></p>{' + parameter_val + '}</div>' +
+									'<div class="col-lg-9">' +
+										'<input type="text" value="" />' +
+									'</div>' +
+								'</div>'
+			})
+			tag_str +=		'</div>'
+		}
+
+
+
+		tag_str	+=			'<div class="tryit row">' +
+								'<div class="col-lg-12">' +
+									'<button type="submit">Try it</button>' +
+								'</div>' +
+							'</div>' +
+						'</section>' +
+				   '</div>'
+	})
+	
+	parent_tag.append(tag_str)
 }
 
 function ajax_data_binding(api_parent, group_name){

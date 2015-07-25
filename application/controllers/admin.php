@@ -66,8 +66,10 @@ class Admin extends CI_Controller{
 	}
 
 	public function get_api_detail($file_name, $external_call_flag = true){
+		$current_url = explode('/admin', current_url());
+
 		$api_list = array(
-			'base_url' => preg_replace('/admin$/', '', current_url()),
+			'base_url' => preg_replace('/admin$/', '', $current_url[0] . '/admin'),
 			'item' => array()
 		);
 
