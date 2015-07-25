@@ -87,6 +87,10 @@ $(document).ready(function(){
 		
 		$.ajax(ajax_config)
 	})
+
+	$('.footer-header-area').click(function(){
+		$('body').removeClass('console-active')
+	})
 })
 
 function json_data_convert_tag(controller_name, data){
