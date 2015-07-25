@@ -231,44 +231,52 @@ function parse_code_block(){
 
 		// JSON
 		} else if (data.indexOf("<?xml") === -1 && data.indexOf("<? xml") === -1) {
-			$(".response .description").html("json response");
+			try {
+				odata = data;
+				data = JSON.stringify(JSON.parse(data), null, 4);
 
-			// brackets
-			var brackets = /({|}|\(|\)|\[|\])/gm;
-			data = data.replace(brackets, "<span class='brackets'>$1</span>");
+				$(".response .description").html("json response");
 
-			// numbers | strings
-			var m;
-			var lastindex = 0;
-			var newdata = "";
-			var numberstrings = /(("[ \t\S]+")|('[ \t\S]+')|([\d]+)){0,1}(:)([\s]{1,})((("[ \t\S]+")|('[ \t\S]+')|([\d]+))){0,1}/gm;
-			while ((m = numberstrings.exec(data)) !== null) {
-				if (m.index === numberstrings.lastIndex) {
-			        numberstrings.lastIndex++;
-			    }
+				// brackets
+				var brackets = /({|}|\(|\)|\[|\])/gm;
+				data = data.replace(brackets, "<span class='brackets'>$1</span>");
 
-			    newdata += data.substr(lastindex, m.index - lastindex);
+				// numbers | strings
+				var m;
+				var lastindex = 0;
+				var newdata = "";
+				var numberstrings = /(("[ \t\S]+")|('[ \t\S]+')|([\d]+)){0,1}(:)([\s]{1,})((("[ \t\S]+")|('[ \t\S]+')|([\d]+))){0,1}/gm;
+				while ((m = numberstrings.exec(data)) !== null) {
+					if (m.index === numberstrings.lastIndex) {
+				        numberstrings.lastIndex++;
+				    }
 
-				if (m[4])
-					newdata += "<span class='number'>" + m[1] + m[5] + "</span>";
-				else
-					newdata += "<span class='string'>" + m[1] + m[5] + "</span>";
+				    newdata += data.substr(lastindex, m.index - lastindex);
 
-				newdata += m[6];
-
-				if (m[7]) {
-					if (m[11])
-						newdata += "<span class='number'>" + m[8] + "</span>";
+					if (m[4])
+						newdata += "<span class='number'>" + m[1] + m[5] + "</span>";
 					else
-						newdata += "<span class='string'>" + m[8] + "</span>";
+						newdata += "<span class='string'>" + m[1] + m[5] + "</span>";
 
-					lastindex = m.index + m[0].length;
-				} else {
-					lastindex = m.index + m[0].length;
+					newdata += m[6];
+
+					if (m[7]) {
+						if (m[11])
+							newdata += "<span class='number'>" + m[8] + "</span>";
+						else
+							newdata += "<span class='string'>" + m[8] + "</span>";
+
+						lastindex = m.index + m[0].length;
+					} else {
+						lastindex = m.index + m[0].length;
+					}
 				}
+				data = newdata + data.substr(lastindex, data.length - lastindex)
+				data = data.replace(/(,)/gm, "<span class='brackets'>$1</span>");
+			} catch(e) {
+				data = odata;
+				$(".response .description").html("response");
 			}
-			data = newdata + data.substr(lastindex, data.length - lastindex)
-			data = data.replace(/(,)/gm, "<span class='brackets'>$1</span>");
 
 		// XML
 		} else {
