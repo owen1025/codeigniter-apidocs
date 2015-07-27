@@ -82,14 +82,23 @@ $(document).ready(function(){
 			// }
 		}
 
-		if (call_type != 'GET'){
-			ajax_config['data'] = ajax_data_binding(api_parent, 'parameter')
-			ajax_config['headers'] = ajax_data_binding(api_parent, 'header')
-		}
+		ajax_config['data'] = ajax_data_binding(api_parent, 'parameter')
+		ajax_config['headers'] = ajax_data_binding(api_parent, 'header')
 
-		ajax_config['success'] = function(data){
-			var request_header_str = '# ' + call_type + ' ' + ajax_config['url']
-			$('.request .code-wrap').text(request_header_str)
+		ajax_config['success'] = function(data, a, request){
+			var request_data_str = '# ' + call_type + ' ' + ajax_config['url'] + '\n'
+
+			for (parameter_key in ajax_config['data']){
+				request_data_str += '? ' + parameter_key + '=' + ajax_config['data'][parameter_key] + '\n'
+			}
+			request_data_str += '\n'
+
+			for (header_key in ajax_config['headers']){
+				request_data_str += '+ ' + header_key + ':' + ajax_config['headers'][header_key] + '\n'
+			}
+			console.log(request_data_str)
+
+			$('.request .code-wrap').text(request_data_str)
 			$(".request pre.code-wrap").removeClass('highlighter')
 			parse_code_block()
 			$('body').addClass('console-active')
@@ -208,11 +217,11 @@ function parse_code_block(){
 		data = data.replace(crosshatch, "<span class='cross-hatch'>$1$2</span>$3<span class='url'>$4</span><span class='cross-hatch'>$5</span>");
 
 		// spacial-charactor
-		var spacialcharactor = /^(\?)([\s]{1,})([\S]+=)([\S]+)$/gm;
+		var spacialcharactor = /^(\?)([\s]{1,})([\S]+=)([\S]+){0,}$/gm;
 		data = data.replace(spacialcharactor, "<span class='spacial-charactor'>$1</span>$2<span class='parameter-key'>$3</span><span class='parameter-value'>$4</span>");
 
 		// header
-		var header = /^(\+)([\s]{1,})([\S]+:)[\s]{1,}([\S]+)$/gm;
+		var header = /^(\+)([\s]{1,})([\S]+:)[\s]{0,}([\S]+)$/gm;
 		data = data.replace(header, "<span class='spacial-charactor'>$1</span>$2<span class='header-key'>$3</span><span class='header-value'>$4</span>");
 
 		// Query Param
