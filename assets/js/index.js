@@ -129,7 +129,7 @@ function json_data_convert_tag(controller_name, data){
 						'<h2 class="method-name">' + api_val.method_name + '</h2>' +
 						'<blockquote>Vestibulum rutrum quam vitae fringilla tincidunt. Suspendisse nec tortor urna. Ut laoreet sodales nisi, quis iaculis nulla iaculis vitae. Donec sagittis faucibus lacus eget blandit. Mauris vitae ultricies metus, at condimentum nulla.</blockquote>' +
 						'<section class="api-box">' +
-							'<div class="method" data-method="' + api_val.call_type.toUpperCase() + '"></div>' +
+							'<div class="method" data-method="' + api_val.call_type + '"></div>' +
 							'<div class="endpoint">';
 
 		url_parameter_str = ''

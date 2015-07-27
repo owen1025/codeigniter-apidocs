@@ -62,7 +62,7 @@
 					<h2 class="method-name"><?= $api_item['method_name']; ?></h2>
 					<blockquote>Vestibulum rutrum quam vitae fringilla tincidunt. Suspendisse nec tortor urna. Ut laoreet sodales nisi, quis iaculis nulla iaculis vitae. Donec sagittis faucibus lacus eget blandit. Mauris vitae ultricies metus, at condimentum nulla.</blockquote>
 					<section class="api-box">
-						<div class="method" data-method="<?= strtoupper($api_item['call_type']) ?>"></div>
+						<div class="method" data-method="<?= $api_item['call_type'] ?>"></div>
 						<div class="endpoint">
 							<?php $url_parameter_str = ''; foreach($api_item['url_parameter'] as $url_parameter_item) $url_parameter_str .= '/{' . $url_parameter_item . '}'; ?>
 							<?= $api_detail['base_url'] . $first_controller . '/' . $api_item['method_name'] . ($url_parameter_str != '/' ? $url_parameter_str : '') ?>
