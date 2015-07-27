@@ -75,6 +75,8 @@ class Admin extends CI_Controller{
 
     	foreach(explode('function', $this->_get_controller_source($file_name)) as $api_str){
     		/* Get API Method name */
+    		// print_r($api_str);
+    		// echo '</br>';
     		preg_match('/\s{0,}(?P<method_name>\w+)\s{0,}\((?P<url_parameter>.*)\)\s{0,}\{(?P<body>.*)\}/s', $api_str, $api_meta_data);
     		
     		if (count($api_meta_data)){
