@@ -206,6 +206,34 @@ function ajax_data_binding(api_parent, group_name){
 }
 
 function parse_code_block(){
+	function formatXml(xml) {
+		var formatted = '';
+		var reg = /(>)[\s]*(<)(\/*)/g;
+		xml = xml.replace(reg, '$1\r\n$2$3');
+		var pad = 0;
+		jQuery.each(xml.split('\r\n'), function(index, node) {
+			var indent = 0;
+			if (node.match( /.+<\/\w[^>]*>$/ )) {
+				indent = 0;
+			} else if (node.match( /^<\/\w/ )) {
+				if (pad != 0) pad -= 1;
+			} else if (node.match( /^<\w[^>]*[^\/]>.*$/ )) {
+				indent = 1;
+			} else {
+				indent = 0;
+			}
+
+			var padding = '';
+			for (var i = 0; i < pad; i++) {
+				padding += '    ';
+			}
+
+			formatted += padding + node + '\r\n';
+			pad += indent;
+		});
+
+		return formatted;
+	}
 	$("pre.code-wrap").each(function(){
 		if ($(this).hasClass("highlighter"))
 			return;
@@ -291,6 +319,8 @@ function parse_code_block(){
 
 		// XML
 		} else {
+			data = formatXml(data);
+
 			$(".response .description").html("xml response");
 
 			var m;
