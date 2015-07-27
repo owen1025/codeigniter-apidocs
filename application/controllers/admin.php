@@ -18,7 +18,7 @@ class Admin extends CI_Controller{
 			'api_list' => $api_list,
 			'api_detail' => $this->get_api_detail($first_controller, false)
 		);
-		
+		// echo json_encode($view_data);
 		$this->load->view('admin.html', $view_data);
 	}
 
@@ -34,12 +34,6 @@ class Admin extends CI_Controller{
 	    return $controller_line;
 	}
 
-	private function _private_method_check($method_name){
-		preg_match('/^_/', $method_name, $private_check);
-		/* Method name start a '_', It is a private method. */
-		return count($private_check) ? true : false;
-	}
-
 	private function _get_api_list(){
 		$controller_arr = array();
 
@@ -51,11 +45,10 @@ class Admin extends CI_Controller{
 					$api_str = $this->_get_controller_source($controller_name);
 
 					$controller_arr[$controller_name] = array();
-					preg_match_all('/public function (?P<method_name>\w+)/', $api_str, $method_list);
+					
+					preg_match_all('/function (?P<method_name>[^_]\w+)\s{0,}\(/', $api_str, $method_list);
 					foreach($method_list['method_name'] as $method_value){
-						/* Private method check */
-						if (!$this->_private_method_check($method_value))
-							array_push($controller_arr[$controller_name], $method_value);
+						array_push($controller_arr[$controller_name], $method_value);
 					}
 				}
 			}
@@ -73,42 +66,32 @@ class Admin extends CI_Controller{
 			'item' => array()
 		);
 
-    	foreach(explode('function', $this->_get_controller_source($file_name)) as $api_str){
-    		/* Get API Method name */
-    		// print_r($api_str);
-    		// echo '</br>';
-    		preg_match('/\s{0,}(?P<method_name>\w+)\s{0,}\((?P<url_parameter>.*)\)\s{0,}\{(?P<body>.*)\}/s', $api_str, $api_meta_data);
-    		
-    		if (count($api_meta_data)){
-    			/* Private method check */
-    			if ($this->_private_method_check($api_meta_data['method_name'])) continue;
-
-    			/* Get API URL Parameter */
-				$url_parameter_list = array();
-				foreach (explode(',', preg_replace(array('/\$/', '/\s/'), array('', ''), $api_meta_data['url_parameter'])) as $url_parameter_str) {
-					if ($url_parameter_str != '')
-						array_push($url_parameter_list, $url_parameter_str);
-				}
-			 
-			 	/* Get API Parameter */
-				preg_match_all("/\\\$this\s{0,}->\s{0,}(?:input\s{0,}->){0,}\s{0,}(get|post|put|delete)\s{0,}\(\s{0,}'(\w+)\'\s{0,}\)/", $api_meta_data['body'], $parameter_list);
-
-				/* Get API Headers */
-				preg_match_all("/\\\$this\s{0,}->\s{0,}input\s{0,}->\s{0,}get_request_header\s{0,}\(\s{0,}\'(\w+)\'\s{0,}\)/", $api_meta_data['body'], $header_list);
+		foreach(explode('function', $this->_get_controller_source($file_name)) as $api_str){
+			$api_str = 'function' . $api_str;
+			preg_match('/function (?P<method_name>[^_]\w+)/', $api_str, $api_method);
 			
-    			$api_item = array(
-    				'method_name' => $api_meta_data['method_name'],
-    				'url_parameter' => $url_parameter_list,
-    				'parameter' => count($parameter_list) ? $parameter_list[2] : null,
-    				'call_type' => count($parameter_list) ? count($parameter_list[1]) ? $parameter_list[1][0] : 'GET' : 'GET',
-    				'header' => $header_list[1]
-    			);
+			if (count($api_method)){
+				/* Get API URL Parameter */
+				$api_split_str = explode('{', $api_str);
+				preg_match_all('/\$(\w+)/', $api_split_str[0], $api_url_parameter);
+				
+				/* Get API Parameter(Form data) */
+				preg_match_all('/\$this\s{0,}->\s{0,}(?:input\s{0,}->){0,}\s{0,}(get|post|put|delete)\s{0,}\(\s{0,}\'(\w+)\'\s{0,}\)/', $api_str, $api_paramter);
 
-    			array_push($api_list['item'], $api_item);
-    		}
-    	}
-	    
-	    if ($external_call_flag == true)
+				/* Get API Custom header */
+				preg_match_all('/\$this\s{0,}->\s{0,}input\s{0,}->\s{0,}get_request_header\s{0,}\(\s{0,}\'(\S+)\'\s{0,}\,{0,}/', $api_str, $api_header);
+
+				array_push($api_list['item'], array(
+					'method_name' => preg_replace('/_(get|post|put|delete)/', '', $api_method['method_name']),
+					'url_parameter' => $api_url_parameter[1],
+					'parameter' => $api_paramter[2],
+					'header' => $api_header[1],
+					'call_type' => count($api_paramter[1]) ? strtoupper($api_paramter[1][0]) : 'GET'
+				));
+			}
+		}
+
+		if ($external_call_flag == true)
 	    	echo json_encode($api_list);
 	    else
 	    	return $api_list;
