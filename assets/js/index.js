@@ -96,10 +96,12 @@ $(document).ready(function(){
 			for (header_key in ajax_config['headers']){
 				request_data_str += '+ ' + header_key + ':' + ajax_config['headers'][header_key] + '\n'
 			}
-			console.log(request_data_str)
-
-			$('.request .code-wrap').text(request_data_str)
+			
+			$('.request pre.code-wrap').text(request_data_str)
 			$(".request pre.code-wrap").removeClass('highlighter')
+			$('.response pre.code-wrap').text(_.escape(data))
+			$('.response pre.code-wrap').removeClass('highlighter')
+
 			parse_code_block()
 			$('body').addClass('console-active')
 		}

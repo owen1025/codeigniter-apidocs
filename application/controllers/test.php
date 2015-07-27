@@ -10,7 +10,10 @@ class Test extends CI_Controller{
 	}
 
 	public function series($test, $t_dk){
-		echo json_encode(array(
+	/* 
+	@Description blah blah blah
+	*/
+		echo xmlrpc_encode(array(
 			'test' => $test,
 			't_dk' => $t_dk,
 			'get_test' => $this->input->get('get_test')
