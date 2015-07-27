@@ -9,16 +9,14 @@ class Admin extends CI_Controller{
 		$this->load->helper('url');
 	}
 
-	public function index(){
-		$api_list = $this->_get_api_list();
-		$first_controller = key($api_list);
-
+	public function view($controller_name = null){
 		$view_data = array(
-			'first_controller' => $first_controller,
-			'api_list' => $api_list,
-			'api_detail' => $this->get_api_detail($first_controller, false)
+			'base_url' => preg_replace('/admin$/', '', explode('/admin', current_url())[0] . '/admin'),
+			'api_list' => $this->_get_api_list(),
 		);
-		// echo json_encode($view_data);
+		$view_data['active_controller'] = $controller_name != null ? $controller_name : key($view_data['api_list']);
+		$view_data['api_detail'] = $this->_get_api_detail($view_data['active_controller']);
+		
 		$this->load->view('admin.html', $view_data);
 	}
 
@@ -48,7 +46,7 @@ class Admin extends CI_Controller{
 					
 					preg_match_all('/function (?P<method_name>[^_]\w+)\s{0,}\(/', $api_str, $method_list);
 					foreach($method_list['method_name'] as $method_value){
-						array_push($controller_arr[$controller_name], $method_value);
+						array_push($controller_arr[$controller_name], preg_replace('/_(get|post|put|delete)/', '', $method_value));
 					}
 				}
 			}
@@ -58,7 +56,7 @@ class Admin extends CI_Controller{
 		return $controller_arr;
 	}
 
-	public function get_api_detail($file_name, $external_call_flag = true){
+	private function _get_api_detail($file_name){
 		$current_url = explode('/admin', current_url());
 
 		$api_list = array(
@@ -81,20 +79,20 @@ class Admin extends CI_Controller{
 				/* Get API Custom header */
 				preg_match_all('/\$this\s{0,}->\s{0,}input\s{0,}->\s{0,}get_request_header\s{0,}\(\s{0,}\'(\S+)\'\s{0,}\,{0,}/', $api_str, $api_header);
 
+				preg_match('/\/\*{1,}\s{0,}@\s{0,}description\s{0,}(?P<description>(?:\w+\s{0,})+)/si', $api_str, $api_description);
+
 				array_push($api_list['item'], array(
 					'method_name' => preg_replace('/_(get|post|put|delete)/', '', $api_method['method_name']),
 					'url_parameter' => $api_url_parameter[1],
 					'parameter' => $api_paramter[2],
 					'header' => $api_header[1],
-					'call_type' => count($api_paramter[1]) ? strtoupper($api_paramter[1][0]) : 'GET'
+					'call_type' => count($api_paramter[1]) ? strtoupper($api_paramter[1][0]) : 'GET',
+					'description' => count($api_description) ? $api_description['description'] : ''
 				));
 			}
 		}
 
-		if ($external_call_flag == true)
-	    	echo json_encode($api_list);
-	    else
-	    	return $api_list;
+	    return $api_list;
 	}
 }
 
