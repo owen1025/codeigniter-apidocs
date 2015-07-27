@@ -99,7 +99,7 @@ $(document).ready(function(){
 			
 			$('.request pre.code-wrap').text(request_data_str)
 			$(".request pre.code-wrap").removeClass('highlighter')
-			$('.response pre.code-wrap').text(_.escape(data))
+			$('.response pre.code-wrap').text(data)
 			$('.response pre.code-wrap').removeClass('highlighter')
 
 			parse_code_block()
@@ -256,7 +256,7 @@ function parse_code_block(){
 				var m;
 				var lastindex = 0;
 				var newdata = "";
-				var numberstrings = /(("[ \t\S]+")|('[ \t\S]+')|([\d]+)){0,1}(:)([\s]{1,})((("[ \t\S]+")|('[ \t\S]+')|([\d]+))){0,1}/gm;
+				var numberstrings = /(("[ \t\S]*")|('[ \t\S]*')|([\d]+)){0,1}(:)([\s]{1,})((("[ \t\S]*")|('[ \t\S]*')|([\d]+|null))){0,1}/gm;
 				while ((m = numberstrings.exec(data)) !== null) {
 					if (m.index === numberstrings.lastIndex) {
 				        numberstrings.lastIndex++;
