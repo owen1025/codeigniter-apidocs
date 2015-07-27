@@ -212,7 +212,7 @@ function parse_code_block(){
 
 		var data = $(this).html();
 
-		data = _.unescape(data).trim();
+		data = _.unescape(_.unescape(data)).trim();
 
 		// cross-hatch
 		var crosshatch = /^(#[\s]+)(GET|POST|DELETE|UPDATE)([\s]{1,})([\S]+)([\s]*HTTP\/[\d.]+){0,1}/gm;
@@ -256,7 +256,7 @@ function parse_code_block(){
 				var m;
 				var lastindex = 0;
 				var newdata = "";
-				var numberstrings = /(("[ \t\S]+")|('[ \t\S]+')|([\d]+)){0,1}(:)([\s]{1,})((("[ \t\S]+")|('[ \t\S]+')|([\d]+))){0,1}/gm;
+				var numberstrings = /(("[ \t\S]*")|('[ \t\S]*')|([\d]+)){0,1}(:)([\s]{1,})((("[ \t\S]*")|('[ \t\S]*')|([\d]+|null))){0,1}/gm;
 				while ((m = numberstrings.exec(data)) !== null) {
 					if (m.index === numberstrings.lastIndex) {
 				        numberstrings.lastIndex++;
