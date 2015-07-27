@@ -99,7 +99,7 @@ $(document).ready(function(){
 			
 			$('.request pre.code-wrap').text(request_data_str)
 			$(".request pre.code-wrap").removeClass('highlighter')
-			$('.response pre.code-wrap').text(_.escape(data))
+			$('.response pre.code-wrap').text(data)
 			$('.response pre.code-wrap').removeClass('highlighter')
 
 			parse_code_block()
@@ -212,7 +212,7 @@ function parse_code_block(){
 
 		var data = $(this).html();
 
-		data = _.unescape(_.unescape(data)).trim();
+		data = _.unescape(data).trim();
 
 		// cross-hatch
 		var crosshatch = /^(#[\s]+)(GET|POST|DELETE|UPDATE)([\s]{1,})([\S]+)([\s]*HTTP\/[\d.]+){0,1}/gm;
