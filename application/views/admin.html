@@ -7,15 +7,15 @@
 	<!-- Style -->
 	<link href='http://fonts.googleapis.com/earlyaccess/nanumgothic.css' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet/less" href="../assets/css/color.less">
-	<link rel="stylesheet/less" href="../assets/css/documentation.less">
+	<link rel="stylesheet/less" href="<?= base_url(); ?>/assets/css/color.less">
+	<link rel="stylesheet/less" href="<?= base_url(); ?>/assets/css/documentation.less">
 
 	<!-- jQuery -->
 	<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 
 	<!-- JS -->
-	<script src="..//assets/js/index.js"></script>
+	<script src="<?= base_url(); ?>/assets/js/index.js"></script>
 
 	<!-- Less -->
 	<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.1/less.min.js"></script>
@@ -29,20 +29,24 @@
 
 	<!-- jquery.slimscroll -->
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.6/jquery.slimscroll.min.js"></script>
+
+	<script>
+		base_url = '<?= $base_url; ?>'
+	</script>
 </head>
-<body class="console-active">
+<body>
 	<aside class="sidebar-container">
 		<div class="sidebar-brand-area">
-			<a href="."><img src="../assets/img/brand.png" /></a>
+			<a href="."><img src="<?= base_url(); ?>/assets/img/brand.png" /></a>
 		</div>
 		<div class="sidebar-menu-area">
 			<div class="sidebar-menu-wrap">
 				<ul>
 					<?php $highlight_flag = true; ?>
-					<?php foreach ($api_list as $index => $api_value): ?>
-						<li class="collection <?php if ($highlight_flag) { $highlight_flag = false; echo 'highlight'; } ?>">
+					<?php foreach ($api_list as $controller_key => $api_value): ?>
+						<li class="collection <?php if ($controller_key == $active_controller) echo 'highlight' ?>">
 							<div class="block"></div>
-							<label><a><?= $index ?></a></label>
+							<label><a><?= $controller_key ?></a></label>
 							<ol>
 								<?php foreach ($api_value as $method_index => $api_method_name): ?>
 									<li class="<?php if (!$method_index) echo 'highlight'; ?>"><a><?= $api_method_name; ?></a></li>
@@ -56,16 +60,20 @@
 	</aside>
 	<div class="main-container">
 		<div class="main-header-area">
-			<h1><?= $first_controller ?></h1>
+			<h1><?= $active_controller ?></h1>
 			<?php foreach ($api_detail['item'] as $api_item): ?>
 				<div class="api-wrap <?= $api_item['method_name']; ?>">
 					<h2 class="method-name"><?= $api_item['method_name']; ?></h2>
-					<blockquote>Vestibulum rutrum quam vitae fringilla tincidunt. Suspendisse nec tortor urna. Ut laoreet sodales nisi, quis iaculis nulla iaculis vitae. Donec sagittis faucibus lacus eget blandit. Mauris vitae ultricies metus, at condimentum nulla.</blockquote>
+					<?php if ($api_item['description'] != '') { ?>
+					<blockquote>
+						<?= $api_item['description']; ?>
+					</blockquote>
+					<?php } ?>
 					<section class="api-box">
 						<div class="method" data-method="<?= $api_item['call_type'] ?>"></div>
 						<div class="endpoint">
 							<?php $url_parameter_str = ''; foreach($api_item['url_parameter'] as $url_parameter_item) $url_parameter_str .= '/{' . $url_parameter_item . '}'; ?>
-							<?= $api_detail['base_url'] . $first_controller . '/' . $api_item['method_name'] . ($url_parameter_str != '/' ? $url_parameter_str : '') ?>
+							<?= $base_url . $active_controller . ($api_item['method_name'] == 'index' ? '' : '/' . $api_item['method_name']) . ($url_parameter_str != '/' ? $url_parameter_str : '') ?>
 						</div>
 						<?php if (count($api_item['url_parameter'])) { ?>
 							<div class="urlparameter group">
