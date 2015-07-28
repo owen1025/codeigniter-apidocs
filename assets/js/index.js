@@ -13,8 +13,8 @@ $(document).ready(function(){
 		_this.addClass('highlight')
 	})
 
-	$('li.collection').click(function(){
-		location.href = base_url + 'admin/view/' + $(this).find('label a').text()
+	$('li.collection label a').click(function(){
+		location.href = base_url + 'admin/view/' + $(this).text()
 	})
 
 	$(document).on('keyup', '.api-box .urlparameter input[type="text"]', function(){
@@ -55,18 +55,6 @@ $(document).ready(function(){
 
 				return url
 			}(),
-			// success: function(data, textStatus, request){
-
-
-			// 	// var codewrap = $(".response pre.code-wrap")
-			// 	// codewrap.html(_.escape(data))
-			// 	// codewrap.removeClass('highlighter')
-			// 	// parse_code_block()
-			// 	// $('body').addClass('console-active')
-			// },
-			// complete : function(){
-			// 	// alert(123)
-			// }
 		}
 
 		ajax_config['data'] = ajax_data_binding(api_parent, 'parameter')
