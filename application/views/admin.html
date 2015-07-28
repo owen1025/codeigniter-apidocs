@@ -61,7 +61,7 @@
 	<div class="main-container">
 		<div class="main-header-area">
 			<h1><?= $active_controller ?></h1>
-			<?php foreach ($api_detail['item'] as $api_item): ?>
+			<?php foreach ($api_detail as $api_item): ?>
 				<div class="api-wrap <?= $api_item['method_name']; ?>">
 					<h2 class="method-name"><?= $api_item['method_name']; ?></h2>
 					<?php if ($api_item['description'] != '') { ?>
@@ -73,7 +73,7 @@
 						<div class="method" data-method="<?= $api_item['call_type'] ?>"></div>
 						<div class="endpoint">
 							<?php $url_parameter_str = ''; foreach($api_item['url_parameter'] as $url_parameter_item) $url_parameter_str .= '/{' . $url_parameter_item . '}'; ?>
-							<?= $base_url . $active_controller . ($api_item['method_name'] == 'index' ? '' : '/' . $api_item['method_name']) . ($url_parameter_str != '/' ? $url_parameter_str : '') ?>
+							<?= $base_url . strtolower($active_controller) . ($api_item['method_name'] == 'index' ? '' : '/' . $api_item['method_name']) . ($url_parameter_str != '/' ? $url_parameter_str : '') ?>
 						</div>
 						<?php if (count($api_item['url_parameter'])) { ?>
 							<div class="urlparameter group">
