@@ -1,5 +1,7 @@
 <?php
 
+defined('BASEPATH') OR exit('No direct script access allowed');
+
 class Admin extends CI_Controller{
 	const CONTROLLER_DIR = './application/controllers';
 
@@ -46,7 +48,7 @@ class Admin extends CI_Controller{
 					
 					preg_match_all('/function (?P<method_name>[^_]\w+)\s{0,}\(/', $api_str, $method_list);
 					foreach($method_list['method_name'] as $method_value){
-						array_push($controller_arr[$controller_name], preg_replace('/_(get|post|put|delete)/', '', $method_value));
+						array_push($controller_arr[$controller_name], preg_replace('/_(get|post|put|delete)$/', '', $method_value));
 					}
 				}
 			}
@@ -59,10 +61,7 @@ class Admin extends CI_Controller{
 	private function _get_api_detail($file_name){
 		$current_url = explode('/admin', current_url());
 
-		$api_list = array(
-			'base_url' => preg_replace('/admin$/', '', $current_url[0] . '/admin'),
-			'item' => array()
-		);
+		$api_list = array();
 
 		foreach(explode('function', $this->_get_controller_source($file_name)) as $api_str){
 			$api_str = 'function' . $api_str;
@@ -81,8 +80,8 @@ class Admin extends CI_Controller{
 
 				preg_match('/\/\*{1,}\s{0,}@\s{0,}description\s{0,}(?P<description>(?:\w+\s{0,})+)/si', $api_str, $api_description);
 
-				array_push($api_list['item'], array(
-					'method_name' => preg_replace('/_(get|post|put|delete)/', '', $api_method['method_name']),
+				array_push($api_list, array(
+					'method_name' => preg_replace('/_(get|post|put|delete)$/', '', $api_method['method_name']),
 					'url_parameter' => $api_url_parameter[1],
 					'parameter' => $api_paramter[2],
 					'header' => $api_header[1],
