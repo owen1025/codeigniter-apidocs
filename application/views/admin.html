@@ -73,50 +73,55 @@
 						<div class="method" data-method="<?= $api_item['call_type'] ?>"></div>
 						<div class="endpoint">
 							<?php $url_parameter_str = ''; foreach($api_item['url_parameter'] as $url_parameter_item) $url_parameter_str .= '/{' . $url_parameter_item . '}'; ?>
-							<?= $base_url . strtolower($active_controller) . ($api_item['method_name'] == 'index' ? '' : '/' . $api_item['method_name']) . ($url_parameter_str != '/' ? $url_parameter_str : '') ?>
+							<?php $api_url = $base_url . strtolower($active_controller) . ($api_item['method_name'] == 'index' ? '' : ($api_item['method_name'] == 'index' ? '' : '/' . $api_item['method_name']) . ($url_parameter_str != '/' ? $url_parameter_str : ''));?>
+							<a href="<?= $api_url; ?>" target="_blank"><?= $api_url; ?></a>
 						</div>
-						<?php if (count($api_item['url_parameter'])) { ?>
-							<div class="urlparameter group">
-								<label>URL Parameter</label>
-								<?php foreach($api_item['url_parameter'] as $url_parameter_item): ?>
-									<div class="row">
-										<div class="col-lg-3"><p class="ico-circle-none"></p><?= '{' . $url_parameter_item . '}' ?></div>
-										<div class="col-lg-9">
-											<input type="text" value="" />
+						<?php if ($api_item['method_name'] != 'index'){ ?>
+							<?php if (count($api_item['url_parameter'])) { ?>
+								<div class="urlparameter group">
+									<label>URL Parameter</label>
+									<?php foreach($api_item['url_parameter'] as $url_parameter_item): ?>
+										<div class="row">
+											<div class="col-lg-3"><p class="ico-circle-none"></p><?= '{' . $url_parameter_item . '}' ?></div>
+											<div class="col-lg-9">
+												<input type="text" value="" />
+											</div>
 										</div>
-									</div>
-								<?php endforeach; ?>
-							</div>
-						<?php } ?>
-						<?php if (count($api_item['header'])) { ?>
-							<div class="header group">
-								<label>Header</label>
-								<?php foreach($api_item['header'] as $header_item): ?>
-									<div class="row">
-										<div class="col-lg-3"><p class="ico-circle-none"></p><?= $header_item ?></div>
-										<div class="col-lg-9">
-											<input type="text" value="" />
+									<?php endforeach; ?>
+								</div>
+							<?php } ?>
+							<?php if (count($api_item['header'])) { ?>
+								<div class="header group">
+									<label>Header</label>
+									<?php foreach($api_item['header'] as $header_item): ?>
+										<div class="row">
+											<div class="col-lg-3"><p class="ico-circle-none"></p><?= $header_item ?></div>
+											<div class="col-lg-9">
+												<input type="text" value="" />
+											</div>
 										</div>
-									</div>
-								<?php endforeach; ?>
-							</div>
-						<?php } ?>
-						<?php if (count($api_item['parameter'])) { ?>
-							<div class="parameter group">
-								<label>Parameter</label>
-								<?php foreach($api_item['parameter'] as $parameter_item): ?>
-									<div class="row">
-										<div class="col-lg-3"><p class="ico-circle"></p><?= $parameter_item ?></div>
-										<div class="col-lg-9">
-											<input type="text" value="" />
+									<?php endforeach; ?>
+								</div>
+							<?php } ?>
+							<?php if (count($api_item['parameter'])) { ?>
+								<div class="parameter group">
+									<label>Parameter</label>
+									<?php foreach($api_item['parameter'] as $parameter_item): ?>
+										<div class="row">
+											<div class="col-lg-3"><p class="ico-circle"></p><?= $parameter_item ?></div>
+											<div class="col-lg-9">
+												<input type="text" value="" />
+											</div>
 										</div>
-									</div>
-								<?php endforeach; ?>
-							</div>
+									<?php endforeach; ?>
+								</div>
+							<?php } ?>
 						<?php } ?>
 						<div class="tryit row">
 							<div class="col-lg-12">
-								<button type="submit">Try it</button>
+								<button type="submit">
+									Try it
+								</button>
 							</div>
 						</div>
 					</section>
