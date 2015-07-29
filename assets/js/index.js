@@ -37,8 +37,8 @@ $(document).ready(function(){
 		var call_type = api_parent.find('.method').attr('data-method')
 
 		var ajax_config = {
-			type : call_type,
-			url : function(){
+			type: call_type,
+			url: function(){
 				var url = api_parent.find('.endpoint').text().replace(/\s/g, '')
 
 				if (call_type == 'GET'){
@@ -55,10 +55,10 @@ $(document).ready(function(){
 
 				return url
 			}(),
-		}
 
-		ajax_config['data'] = ajax_data_binding(api_parent, 'parameter')
-		ajax_config['headers'] = ajax_data_binding(api_parent, 'header')
+			data: call_type != 'GET' ? ajax_data_binding(api_parent, 'parameter') : null,
+			headers: ajax_data_binding(api_parent, 'header')
+		}
 
 		ajax_config['success'] = function(data, a, request){
 			var request_data_str = '# ' + call_type + ' ' + ajax_config['url'] + '\n'
@@ -72,10 +72,12 @@ $(document).ready(function(){
 				request_data_str += '+ ' + header_key + ':' + ajax_config['headers'][header_key] + '\n'
 			}
 			
-			$('.request pre.code-wrap').text(request_data_str)
-			$(".request pre.code-wrap").removeClass('highlighter')
-			$('.response pre.code-wrap').text(data)
-			$('.response pre.code-wrap').removeClass('highlighter')
+			var request_code_wrap = $('.request pre.code-wrap')
+			var response_code_wrap = $('.response pre.code-wrap')
+			request_code_wrap.text(request_data_str)
+			request_code_wrap.removeClass('highlighter')
+			response_code_wrap.text(data)
+			response_code_wrap.removeClass('highlighter')
 
 			parse_code_block()
 			$('body').addClass('console-active')
@@ -88,88 +90,6 @@ $(document).ready(function(){
 		$('body').removeClass('console-active')
 	})
 })
-
-// function json_data_convert_tag(controller_name, data){
-// 	var parent_tag = $('.main-header-area')
-// 	var api_data = JSON.parse(data)
-// 	var tag_str = ''
-
-// 	api_data.item.forEach(function(api_val, index){
-// 		if (!index){
-// 			parent_tag.empty()
-// 			tag_str += '<h1>' + controller_name + '</h1>'
-// 		}
-
-// 		tag_str += '<div class="api-wrap ' + api_val.method_name + '?>">' +
-// 						'<h2 class="method-name">' + api_val.method_name + '</h2>' +
-// 						'<blockquote>Vestibulum rutrum quam vitae fringilla tincidunt. Suspendisse nec tortor urna. Ut laoreet sodales nisi, quis iaculis nulla iaculis vitae. Donec sagittis faucibus lacus eget blandit. Mauris vitae ultricies metus, at condimentum nulla.</blockquote>' +
-// 						'<section class="api-box">' +
-// 							'<div class="method" data-method="' + api_val.call_type + '"></div>' +
-// 							'<div class="endpoint">';
-
-// 		url_parameter_str = ''
-// 		api_val.url_parameter.forEach(function(urlparameter, index){
-// 			url_parameter_str += '/{' + urlparameter + '}'
-// 		})
-
-// 		tag_str +=				api_data.base_url + controller_name + '/' + api_val.method_name + (url_parameter_str != '/' ? url_parameter_str : '') +
-// 							'</div>'
-		
-// 		if (api_val.url_parameter.length){
-// 			tag_str += 		'<div class="urlparameter group">' +
-// 								'<label>URL Parameter</label>' 
-// 			api_val.url_parameter.forEach(function(parameter_val, index){
-// 				tag_str +=		'<div class="row">' +
-// 									'<div class="col-lg-3"><p class="ico-circle-none"></p>{' + parameter_val + '}</div>' +
-// 									'<div class="col-lg-9">' +
-// 										'<input type="text" value="" />' +
-// 									'</div>' +
-// 								'</div>'
-// 			})
-// 			tag_str +=		'</div>'
-// 		}
-
-// 		if (api_val.header.length){
-// 			tag_str += 		'<div class="header group">' +
-// 								'<label>Header</label>' 
-// 			api_val.header.forEach(function(header_val, index){
-// 				tag_str +=		'<div class="row">' +
-// 									'<div class="col-lg-3"><p class="ico-circle-none"></p>{' + header_val + '}</div>' +
-// 									'<div class="col-lg-9">' +
-// 										'<input type="text" value="" />' +
-// 									'</div>' +
-// 								'</div>'
-// 			})
-// 			tag_str +=		'</div>'
-// 		}
-
-// 		if (api_val.parameter.length){
-// 			tag_str += 		'<div class="parameter group">' +
-// 								'<label>Parameter</label>' 
-// 			api_val.parameter.forEach(function(parameter_val, index){
-// 				tag_str +=		'<div class="row">' +
-// 									'<div class="col-lg-3"><p class="ico-circle-none"></p>{' + parameter_val + '}</div>' +
-// 									'<div class="col-lg-9">' +
-// 										'<input type="text" value="" />' +
-// 									'</div>' +
-// 								'</div>'
-// 			})
-// 			tag_str +=		'</div>'
-// 		}
-
-
-
-// 		tag_str	+=			'<div class="tryit row">' +
-// 								'<div class="col-lg-12">' +
-// 									'<button type="submit">Try it</button>' +
-// 								'</div>' +
-// 							'</div>' +
-// 						'</section>' +
-// 				   '</div>'
-// 	})
-	
-// 	parent_tag.append(tag_str)
-// }
 
 function ajax_data_binding(api_parent, group_name){
 	var data_str = {}
