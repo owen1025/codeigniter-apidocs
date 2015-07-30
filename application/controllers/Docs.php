@@ -19,8 +19,10 @@ class Docs extends CI_Controller{
 	}
 
 	public function view($controller_name = null){
+		$current_url_split_str = explode('/docs', current_url());
+
 		$view_data = array(
-			'base_url' => preg_replace('/docs$/', '', explode('/docs', current_url())[0] . '/docs'),
+			'base_url' => preg_replace('/docs$/', '', $current_url_split_str[0] . '/docs'),
 			'api_list' => $this->_get_api_list(),
 		);
 		$view_data['active_controller'] = $controller_name != null ? $controller_name : key($view_data['api_list']);
@@ -32,12 +34,14 @@ class Docs extends CI_Controller{
 	private function _get_controller_source($file_name){
 		$controller_line = '';
 		// Get your source in Controller (all contents)
-		if ($fp = fopen(self::CONTROLLER_DIR . '/' . $file_name . '.php', "r")){
-	    	while (!feof($fp)) {
-	    	   $controller_line .= fgets($fp);
-	    	}
-	    	fclose($fp);
-	    }
+		if (strlen($file_name)){
+			if ($fp = fopen(self::CONTROLLER_DIR . '/' . $file_name . '.php', "r")){
+		    	while (!feof($fp)) {
+		    	   $controller_line .= fgets($fp);
+		    	}
+		    	fclose($fp);
+		    }
+		}
 	    return $controller_line;
 	}
 
@@ -53,6 +57,7 @@ class Docs extends CI_Controller{
 					
 					$controller_name = explode('.php', $entry);
 					$controller_name = $controller_name[0];
+
 					$api_str = $this->_get_controller_source($controller_name);
 
 					$controller_arr[$controller_name] = array();
