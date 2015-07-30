@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Admin extends CI_Controller{
+class Docs extends CI_Controller{
 	const CONTROLLER_DIR = './application/controllers';
 
 	public function __construct(){
@@ -11,15 +11,22 @@ class Admin extends CI_Controller{
 		$this->load->helper('url');
 	}
 
+	public function index(){
+		// redirect docs/view
+    	echo 	'<script>
+					window.location.href = "' . current_url() . '/view"
+    		  	</script>';
+	}
+
 	public function view($controller_name = null){
 		$view_data = array(
-			'base_url' => preg_replace('/admin$/', '', explode('/admin', current_url())[0] . '/admin'),
+			'base_url' => preg_replace('/docs$/', '', explode('/docs', current_url())[0] . '/docs'),
 			'api_list' => $this->_get_api_list(),
 		);
 		$view_data['active_controller'] = $controller_name != null ? $controller_name : key($view_data['api_list']);
 		$view_data['api_detail'] = $this->_get_api_detail($view_data['active_controller']);
 		
-		$this->load->view('admin.html', $view_data);
+		$this->load->view('docs.html', $view_data);
 	}
 
 	private function _get_controller_source($file_name){
@@ -40,8 +47,12 @@ class Admin extends CI_Controller{
 		/* Open your_project/application/controllers directory */
 		if ($handle = opendir(self::CONTROLLER_DIR)) {
 			while (false !== ($entry = readdir($handle))) {
-				if ($entry != "." && $entry != ".." && strpos($entry, ".php") && strpos(self::CONTROLLER_DIR . $entry, "admin.php") == false) {
-					$controller_name = explode('.php', $entry)[0];
+				// Exception Cotroller : Docs.php, Welcome.php(default controller)
+				if ($entry != "." && $entry != ".." && strpos($entry, ".php") && strpos(self::CONTROLLER_DIR . strtolower($entry), "docs") == false && 
+					strpos(self::CONTROLLER_DIR . strtolower($entry), "welcome") == false) {
+					
+					$controller_name = explode('.php', $entry);
+					$controller_name = $controller_name[0];
 					$api_str = $this->_get_controller_source($controller_name);
 
 					$controller_arr[$controller_name] = array();
@@ -59,7 +70,7 @@ class Admin extends CI_Controller{
 	}
 
 	private function _get_api_detail($file_name){
-		$current_url = explode('/admin', current_url());
+		$current_url = explode('/docs', current_url());
 
 		$api_list = array();
 
@@ -78,6 +89,7 @@ class Admin extends CI_Controller{
 				/* Get API Custom header */
 				preg_match_all('/\$this\s{0,}->\s{0,}input\s{0,}->\s{0,}get_request_header\s{0,}\(\s{0,}\'(\S+)\'\s{0,}\,{0,}/', $api_str, $api_header);
 
+				/* Get API Description */
 				preg_match('/\/\*{1,}\s{0,}@\s{0,}description\s{0,}(?P<description>(?:\w+\s{0,})+)/si', $api_str, $api_description);
 
 				array_push($api_list, array(
