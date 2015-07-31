@@ -1,1 +1,0 @@
-# codeigniter-admin
