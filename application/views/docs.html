@@ -40,6 +40,14 @@
 		const SCROLL_Y_CONTROL = 50
 
 		$(document).ready(function(){
+			$('.sidebar-menu-wrap').slimScroll({
+		        height: '100%'
+		    });
+		    $('.code-wrap').slimScroll({
+		    	height: '226px'
+		    });
+
+			// Menu highlighting
 			$(window).scroll(function(){
 				var window_scroll_top = $(this).scrollTop()
 
@@ -59,6 +67,7 @@
 				})
 			})
 
+			// Menu
 			$('ol li').click(function(event){
 				event.preventDefault()
 
@@ -71,10 +80,12 @@
 				_this.addClass('highlight')
 			})
 
+			// Menu redirect
 			$('li.collection label a').click(function(){
 				location.href = base_url + 'docs/view/' + $(this).text()
 			})
 
+			// API URL update
 			$(document).on('keyup', '.api-box .urlparameter input[type="text"]', function(){
 				var _this = $(this)
 				var input_index = _this.parents('.urlparameter').find('input[type="text"]').index(_this)
@@ -90,6 +101,7 @@
 				url_val.text(split_url[0])
 			})
 
+			// API Request
 			$(document).on('click', 'button[type="submit"]', function(){
 				var api_parent = $(this).parents('section')
 				var call_type = api_parent.find('.method').attr('data-method')
@@ -137,18 +149,23 @@
 					response_code_wrap.text(data)
 					response_code_wrap.removeClass('highlighter')
 
+					// Code highlighting
 					parse_code_block()
+
+					// Open api-console
 					$('body').addClass('console-active')
 				}
 				
 				$.ajax(ajax_config)
 			})
 
+			// Close api-console
 			$('.footer-header-area').click(function(){
 				$('body').removeClass('console-active')
 			})
 		})
 
+		// Bind API request
 		function ajax_data_binding(api_parent, group_name){
 			var data_str = {}
 			$.each(api_parent.find('.' + group_name).children('.row'), function(index, row){
@@ -158,8 +175,10 @@
 			return data_str
 		}
 
+		// Code highlighting
 		function parse_code_block(){
-			function formatXml(xml) {
+			// XML beautify
+			function formatXml(xml){
 				var formatted = '';
 				var reg = /(>)[\s]*(<)(\/*)/g;
 				xml = xml.replace(reg, '$1\r\n$2$3');
@@ -187,6 +206,8 @@
 
 				return formatted;
 			}
+
+			// Highlight code block
 			$("pre.code-wrap").each(function(){
 				if ($(this).hasClass("highlighter"))
 					return;
@@ -207,7 +228,7 @@
 				var header = /^(\+)([\s]{1,})([\S]+:)[\s]{0,}([\S]+)$/gm;
 				data = data.replace(header, "<span class='spacial-charactor'>$1</span>$2<span class='header-key'>$3</span><span class='header-value'>$4</span>");
 
-				// Query Param
+				// Check query param
 				var newlength = 0;
 				var queryParam = /(((&){0,1}[\w]+=)([\w]+))/gm;
 				while ((m = queryParam.exec(data)) !== null) {
@@ -216,6 +237,7 @@
 					newlength += m[1].length;
 				}
 
+				// Query param
 				if (data.length == newlength) {
 					$(".response .description").html("query response");
 
@@ -305,6 +327,7 @@
 	</script>
 </head>
 <body>
+	<!-- Sidebar Begin -->
 	<aside class="sidebar-container">
 		<div class="sidebar-brand-area">
 			<img src="https://cdn.rawgit.com/myartame/codeigniter-apidocs/develop/assets/img/brand.png" alt="">
@@ -328,6 +351,9 @@
 			</div>
 		</div>
 	</aside>
+	<!-- Sidebar End -->
+
+	<!-- Body Begin -->
 	<div class="main-container">
 		<div class="main-header-area">
 			<h1><?= $active_controller ?></h1>
@@ -399,7 +425,9 @@
 			<?php endforeach; ?>
 		</div>
 	</div>
+	<!-- Body End -->
 
+	<!-- Footer Begin -->
 	<footer class="footer-container">
 		<div class="footer-header-area">
 			<label>Request Console</label>
@@ -420,18 +448,6 @@
 			</div>
 		</div>
 	</footer>
-
-	<script type="text/javascript">
-		$(function() {
-			$('.sidebar-menu-wrap').slimScroll({
-		        height: '100%'
-		    });
-		    $('.code-wrap').slimScroll({
-		    	height: '226px'
-		    });
-
-		    parse_code_block();
-		});
-	</script>
+	<!-- Footer End -->
 </body>
 </html>
