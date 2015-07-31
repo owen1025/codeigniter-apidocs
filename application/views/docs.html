@@ -37,10 +37,14 @@
 	<!-- JS -->
 	<script>
 		var base_url = '<?= $base_url ?>'
+		var menu_click_flag = false
 		const SCROLL_Y_CONTROL = 50
 
 		$(document).ready(function(){
 			$(window).scroll(function(){
+				if (menu_click_flag)
+					return false
+
 				var _window = $(this)
 				var window_scroll_top = _window.scrollTop()
 
@@ -53,7 +57,7 @@
 			    		var _method_dom = $(method_dom)
 			    		var method_dom_top = _method_dom.offset().top
 			    		
-			    		if (window_scroll_top + 20 <= method_dom_top && method_dom_top <= window_scroll_top + 210){
+			    		if (window_scroll_top <= method_dom_top + _method_dom.height() / 2){
 			    			$('li.highlight ol .highlight').removeClass('highlight')
 			    			$('li.highlight ol li').each(function(index, li_dom){
 			    				if (_method_dom.find('h2.method-name').text() == $(li_dom).find('a').text()){
@@ -61,6 +65,7 @@
 			    					return false
 			    				}
 			    			})
+			    			return false
 			    		}
 			    	})
 			    }
@@ -68,11 +73,12 @@
 
 			$('ol li').click(function(event){
 				event.preventDefault()
+				menu_click_flag = true
 
 				var _this = $(this);
 				$('html, body').stop(true).animate({
 					scrollTop: $('.' + _this.text()).offset().top - SCROLL_Y_CONTROL
-				}, 500);
+				}, 500, function() { menu_click_flag = false });
 
 				$('li.highlight ol .highlight').removeClass('highlight')
 				_this.addClass('highlight')
