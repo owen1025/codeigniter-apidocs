@@ -1,9 +1,9 @@
 # Codeigniter-apidocs
 
-## What's Codeigniter-apidocs?
 니가 Codeigniter로 만든 프로젝트의 controller를 분석하여 문서화하며 API를 테스트 해 볼 수 있도록 Request Form과 Response Form을 제공합니다.
 
 ## Support
+
 1. PHP 5.3 +
 2. Codeigniter 2.0 and 3.0
 3. IE 8+, Chrome, Safari, Firefox
@@ -17,11 +17,21 @@ Very simply installation!
 
 ## Usage
 
-Connect to base_url/your_project/index.php/docs or base_url/your_project/docs
+Connect to `base_url/your_project/index.php/docs` or `base_url/your_project/docs`
 
-### Screenshot
+#### Screenshot
 
-### Description designation method
+
+
+#### Description designation method
+
+'''public function api_test(){
+		/*
+			@Description This is description 
+		*/
+		echo "API TEST";
+	}'''
+
 
 ## License
 
