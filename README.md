@@ -25,13 +25,14 @@ Connect to `base_url/your_project/index.php/docs` or `base_url/your_project/docs
 
 #### Description designation method
 
-'''public function api_test(){
-		/*
-			@Description This is description 
-		*/
-		echo "API TEST";
-	}'''
-
+'''php
+public function api_test(){
+	/*
+		@Description This is description 
+	*/
+	echo "API TEST";
+}
+'''
 
 ## License
 
