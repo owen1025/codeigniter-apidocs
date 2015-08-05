@@ -25,6 +25,8 @@ Connect to `base_url/your_project/index.php/docs` or `base_url/your_project/docs
 
 #### Description designation method
 
+![alt tag](https://cdn.rawgit.com/myartame/codeigniter-apidocs/develop/assets/img/description_screenshot.png)
+
 '''php
 public function api_test(){
 	/*
