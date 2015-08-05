@@ -128,7 +128,7 @@
 					headers: ajax_data_binding(api_parent, 'header')
 				}
 
-				ajax_config['success'] = function(data, a, request){
+				var response_func = function(data){
 					var request_data_str = '# ' + call_type + ' ' + ajax_config['url'] + '\n'
 
 					for (parameter_key in ajax_config['data']){
@@ -139,17 +139,31 @@
 					for (header_key in ajax_config['headers']){
 						request_data_str += '+ ' + header_key + ':' + ajax_config['headers'][header_key] + '\n'
 					}
-					
+
+					// Parse error message
+					var response_text = data
+					var error_regex = /<h1>(.*)<\/h1>\s{0,}<p>(.*)<\/p>/g
+
+					if (typeof(data) == 'object'){
+						response_text = data.responseText.match(error_regex)
+					}
+					else if (data.match(/<h1>/g)){
+						response_text = data.match(error_regex)
+					}
+
 					var request_code_wrap = $('.request pre.code-wrap')
 					var response_code_wrap = $('.response pre.code-wrap')
 					request_code_wrap.text(request_data_str)
 					request_code_wrap.removeClass('highlighter')
-					response_code_wrap.text(data)
+					response_code_wrap.text(response_text)
 					response_code_wrap.removeClass('highlighter')
 
 					parse_code_block()
 					$('body').addClass('console-active')
 				}
+
+				ajax_config['success'] = response_func
+				ajax_config['error'] = response_func
 				
 				$.ajax(ajax_config)
 			})
@@ -370,12 +384,12 @@
 									<?php endforeach; ?>
 								</div>
 							<?php } ?>
-							<?php if (count($api_item['header'])) { ?>
-								<div class="header group">
-									<label>Header</label>
-									<?php foreach($api_item['header'] as $header_item): ?>
+							<?php if (count($api_item['parameter'])) { ?>
+								<div class="parameter group">
+									<label>Parameter</label>
+									<?php foreach($api_item['parameter'] as $parameter_item): ?>
 										<div class="row">
-											<div class="col-lg-3"><p class="ico-circle-none"></p><?= $header_item ?></div>
+											<div class="col-lg-3"><p class="ico-circle"></p><?= $parameter_item ?></div>
 											<div class="col-lg-9">
 												<input type="text" value="" />
 											</div>
@@ -383,12 +397,12 @@
 									<?php endforeach; ?>
 								</div>
 							<?php } ?>
-							<?php if (count($api_item['parameter'])) { ?>
-								<div class="parameter group">
-									<label>Parameter</label>
-									<?php foreach($api_item['parameter'] as $parameter_item): ?>
+							<?php if (count($api_item['header'])) { ?>
+								<div class="header group">
+									<label>Header</label>
+									<?php foreach($api_item['header'] as $header_item): ?>
 										<div class="row">
-											<div class="col-lg-3"><p class="ico-circle"></p><?= $parameter_item ?></div>
+											<div class="col-lg-3"><p class="ico-circle-none"></p><?= $header_item ?></div>
 											<div class="col-lg-9">
 												<input type="text" value="" />
 											</div>
