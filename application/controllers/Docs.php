@@ -25,6 +25,7 @@ class Docs extends CI_Controller{
 		);
 		$view_data['active_controller'] = $controller_name != null ? $controller_name : key($view_data['api_list']);
 		$view_data['api_detail'] = $this->_get_api_detail($view_data['active_controller']);
+		// print_r($view_data);
 		
 		$this->load->view('docs.html', $view_data);
 	}
@@ -33,6 +34,7 @@ class Docs extends CI_Controller{
 		$controller_line = '';
 		// Get your source in Controller (all contents)
 		if ($fp = fopen(self::CONTROLLER_DIR . '/' . $file_name . '.php', "r")){
+			
 	    	while (!feof($fp)) {
 	    	   $controller_line .= fgets($fp);
 	    	}
@@ -47,9 +49,8 @@ class Docs extends CI_Controller{
 		/* Open your_project/application/controllers directory */
 		if ($handle = opendir(self::CONTROLLER_DIR)) {
 			while (false !== ($entry = readdir($handle))) {
-				// Exception Cotroller : Docs.php, Welcome.php(default controller)
-				if ($entry != "." && $entry != ".." && strpos($entry, ".php") && strpos(self::CONTROLLER_DIR . strtolower($entry), "docs") == false && 
-					strpos(self::CONTROLLER_DIR . strtolower($entry), "welcome") == false) {
+				if ($entry != "." && $entry != ".." && strpos($entry, ".php") && !preg_match('/^(?:docs.php)$/i', $entry) && 
+					!preg_match('/^(?:welcome.php)$/i', $entry)) {
 					
 					$controller_name = explode('.php', $entry);
 					$controller_name = $controller_name[0];
@@ -71,7 +72,6 @@ class Docs extends CI_Controller{
 
 	private function _get_api_detail($file_name){
 		$current_url = explode('/docs', current_url());
-
 		$api_list = array();
 
 		foreach(explode('function', $this->_get_controller_source($file_name)) as $api_str){
