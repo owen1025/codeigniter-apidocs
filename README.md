@@ -2,6 +2,9 @@
 
 니가 Codeigniter로 만든 프로젝트의 controller를 분석하여 문서화하며 API를 테스트 해 볼 수 있도록 Request Form과 Response Form을 제공합니다.
 
+## Feature
+1. RESTful API 
+
 ## Support
 
 1. PHP 5.3 +
@@ -21,9 +24,11 @@ Connect to `base_url/your_project/index.php/docs` or `base_url/your_project/docs
 
 #### Screenshot
 
-
+![alt tag](https://cdn.rawgit.com/myartame/codeigniter-apidocs/develop/assets/img/docs_screenshot.png)
 
 #### Description designation method
+
+Your's API Code in 
 
 For example
 ```php
