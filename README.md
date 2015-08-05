@@ -43,7 +43,7 @@ public function api_test(){
 
 
 아래 형식으로 보여집니다.
-![alt tag](https://cdn.rawgit.com/myartame/codeigniter-apidocs/develop/assets/img/docs_screenshot.png)
+![alt tag](https://cdn.rawgit.com/myartame/codeigniter-apidocs/develop/assets/img/description_screenshot.png)
 
 ## License
 
