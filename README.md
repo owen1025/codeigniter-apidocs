@@ -29,7 +29,7 @@ Connect to `base_url/your_project/index.php/docs` or `base_url/your_project/docs
 
 #### Description designation method
 
-+ Once write `/* @Description <description_content> */` format at api code, Api form will apper. 
++ Once insert `/* @Description <description_content> */` at api code, Api form will apper. 
 
 For example
 ```php
