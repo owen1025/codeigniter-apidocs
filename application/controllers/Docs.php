@@ -25,6 +25,7 @@ class Docs extends CI_Controller{
 		);
 		$view_data['active_controller'] = $controller_name != null ? $controller_name : key($view_data['api_list']);
 		$view_data['api_detail'] = $this->_get_api_detail($view_data['active_controller']);
+		// print_r($view_data);
 		
 		$this->load->view('docs.html', $view_data);
 	}
@@ -73,34 +74,32 @@ class Docs extends CI_Controller{
 		$current_url = explode('/docs', current_url());
 		$api_list = array();
 
-		if ($file_name != null){
-			foreach(explode('function', $this->_get_controller_source($file_name)) as $api_str){
-				$api_str = 'function' . $api_str;
-				preg_match('/function (?P<method_name>[^_]\w+)/', $api_str, $api_method);
+		foreach(explode('function', $this->_get_controller_source($file_name)) as $api_str){
+			$api_str = 'function' . $api_str;
+			preg_match('/function (?P<method_name>[^_]\w+)/', $api_str, $api_method);
+			
+			if (count($api_method)){
+				/* Get API URL Parameter */
+				$api_split_str = explode('{', $api_str);
+				preg_match_all('/\$(\w+)/', $api_split_str[0], $api_url_parameter);
 				
-				if (count($api_method)){
-					/* Get API URL Parameter */
-					$api_split_str = explode('{', $api_str);
-					preg_match_all('/\$(\w+)/', $api_split_str[0], $api_url_parameter);
-					
-					/* Get API Parameter(Form data) */
-					preg_match_all('/\$this\s{0,}->\s{0,}(?:input\s{0,}->){0,}\s{0,}(get|post|put|delete)\s{0,}\(\s{0,}\'(\w+)\'\s{0,}\)/', $api_str, $api_paramter);
+				/* Get API Parameter(Form data) */
+				preg_match_all('/\$this\s{0,}->\s{0,}(?:input\s{0,}->){0,}\s{0,}(get|post|put|delete)\s{0,}\(\s{0,}\'(\w+)\'\s{0,}\)/', $api_str, $api_paramter);
 
-					/* Get API Custom header */
-					preg_match_all('/\$this\s{0,}->\s{0,}input\s{0,}->\s{0,}get_request_header\s{0,}\(\s{0,}\'(\S+)\'\s{0,}\,{0,}/', $api_str, $api_header);
+				/* Get API Custom header */
+				preg_match_all('/\$this\s{0,}->\s{0,}input\s{0,}->\s{0,}get_request_header\s{0,}\(\s{0,}\'(\S+)\'\s{0,}\,{0,}/', $api_str, $api_header);
 
-					/* Get API Description */
-					preg_match('/\/\*{1,}\s{0,}@\s{0,}description\s{0,}(?P<description>(?:\w+\s{0,})+)/si', $api_str, $api_description);
+				/* Get API Description */
+				preg_match('/\/\*{1,}\s{0,}@\s{0,}description\s{0,}(?P<description>(?:\w+\s{0,})+)/si', $api_str, $api_description);
 
-					array_push($api_list, array(
-						'method_name' => preg_replace('/_(get|post|put|delete)$/', '', $api_method['method_name']),
-						'url_parameter' => $api_url_parameter[1],
-						'parameter' => $api_paramter[2],
-						'header' => $api_header[1],
-						'call_type' => count($api_paramter[1]) ? strtoupper($api_paramter[1][0]) : 'GET',
-						'description' => count($api_description) ? $api_description['description'] : ''
-					));
-				}
+				array_push($api_list, array(
+					'method_name' => preg_replace('/_(get|post|put|delete)$/', '', $api_method['method_name']),
+					'url_parameter' => $api_url_parameter[1],
+					'parameter' => $api_paramter[2],
+					'header' => $api_header[1],
+					'call_type' => count($api_paramter[1]) ? strtoupper($api_paramter[1][0]) : 'GET',
+					'description' => count($api_description) ? $api_description['description'] : ''
+				));
 			}
 		}
 
