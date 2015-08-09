@@ -3,7 +3,7 @@
 Parsing Codeigniter project's controller and make api documents. Also provide Request Form and Response Form for api testing.
 
 ## Feature
-+ Restfull api request support 
++ Restful api request support 
 + JSON/ XML response format support
 
 ## Support
@@ -47,4 +47,4 @@ will show below
 
 ## License
 
-+ See LICENSE(https://)
++ See [LICENSE](https://https://cdn.rawgit.com/myartame/codeigniter-apidocs/master/LICENSE)
