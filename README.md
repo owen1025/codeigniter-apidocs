@@ -47,4 +47,4 @@ will show below
 
 ## License
 
-+ See [LICENSE](https://https://cdn.rawgit.com/myartame/codeigniter-apidocs/master/LICENSE)
++ See [LICENSE](https://cdn.rawgit.com/myartame/codeigniter-apidocs/master/LICENSE)
