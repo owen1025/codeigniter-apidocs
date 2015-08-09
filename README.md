@@ -5,7 +5,6 @@ Parsing Codeigniter project's controller and make api documents. Also provide Re
 ## Feature
 + Restfull api request support 
 + JSON/ XML response format support
-+ File upload support
 
 ## Support
 
