@@ -92,12 +92,23 @@ class Docs extends CI_Controller{
 				/* Get API Description */
 				preg_match('/\/\*{1,}\s{0,}@\s{0,}description\s{0,}(?P<description>(?:\w+\s{0,})+)/si', $api_str, $api_description);
 
+				/* Check use Codeigniter_restserver */ 
+				$rest_method_pattern = '/_(get|post|put|delete)$/';
+				$call_type = null;
+				if (preg_match($rest_method_pattern, $api_method['method_name'], $rest_method_parameter)){
+					preg_replace('/_(get|post|put|delete)$/', '', $api_method['method_name']);
+					$call_type = strtoupper($rest_method_parameter[1]);
+				}
+				else{
+					$call_type = count($api_paramter[1]) ? strtoupper($api_paramter[1][0]) : 'GET';
+				}
+				
 				array_push($api_list, array(
-					'method_name' => preg_replace('/_(get|post|put|delete)$/', '', $api_method['method_name']),
+					'method_name' => $api_method['method_name'],
 					'url_parameter' => $api_url_parameter[1],
 					'parameter' => $api_paramter[2],
 					'header' => $api_header[1],
-					'call_type' => count($api_paramter[1]) ? strtoupper($api_paramter[1][0]) : 'GET',
+					'call_type' => $call_type,
 					'description' => count($api_description) ? $api_description['description'] : ''
 				));
 			}

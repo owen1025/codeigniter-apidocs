@@ -15,9 +15,6 @@
 	<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 
-	<!-- Test Javascript Code -->
-	<!-- <script src="<?= base_url(); ?>/assets/js/index.js"></script> -->
-
 	<!-- Less -->
 	<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.1/less.min.js"></script>
 
@@ -142,13 +139,16 @@
 
 					// Parse error message
 					var response_text = data
-					var error_regex = /<h1>(.*)<\/h1>\s{0,}<p>(.*)<\/p>/g
+					var error_regex = /<h1>(.*)<\/h1>\s{0,}<p>(.*)<\/p>/gm
 
-					if (typeof(data) == 'object'){
+					if (data.responseText != undefined){
 						response_text = data.responseText.match(error_regex)
 					}
-					else if (data.match(/<h1>/g)){
-						response_text = data.match(error_regex)
+					else if (typeof(data) == 'string'){
+						response_text = data.match(/<h1>/g) ? data.match(error_regex) : data
+					}
+					else if (typeof(data) == 'object'){
+						response_text = JSON.stringify(data)
 					}
 
 					var request_code_wrap = $('.request pre.code-wrap')
