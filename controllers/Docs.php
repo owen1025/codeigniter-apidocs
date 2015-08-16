@@ -90,7 +90,7 @@ class Docs extends CI_Controller{
 				preg_match_all('/\$this\s{0,}->\s{0,}input\s{0,}->\s{0,}get_request_header\s{0,}\(\s{0,}\'(\S+)\'\s{0,}\,{0,}/', $api_str, $api_header);
 
 				/* Get API Description */
-				preg_match('/\/\*{1,}\s{0,}@\s{0,}description\s{0,}(?P<description>(?:\w+\s{0,})+)/si', $api_str, $api_description);
+				preg_match('/\/\*{1,}\s{0,}@description(?P<description>.*)\*\//si', $api_str, $api_description);
 
 				/* Check use Codeigniter_restserver */ 
 				$rest_method_pattern = '/_(get|post|put|delete)$/';
