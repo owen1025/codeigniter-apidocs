@@ -138,19 +138,18 @@
 					}
 
 					// Parse error message
+					var error_regex = /<h1>(.*)<\/h1>\s{0,}<p>(.*)<\/p>/g
 					var response_text = data
-					var error_regex = /<h1>(.*)<\/h1>\s{0,}<p>(.*)<\/p>/gm
-
-					if (data.responseText != undefined){
-						response_text = data.responseText.match(error_regex)
+					if (data.responseText == undefined){
+						if (typeof(data) == 'string'){
+							response_text = data.match(/<h1>/g) ? data.match(error_regex) : response_text
+						}
+						else
+							response_text = JSON.stringify(data)
 					}
-					else if (typeof(data) == 'string'){
-						response_text = data.match(/<h1>/g) ? data.match(error_regex) : data
-					}
-					else if (typeof(data) == 'object'){
-						response_text = JSON.stringify(data)
-					}
-
+					else
+						response_text = data.responseText
+					
 					var request_code_wrap = $('.request pre.code-wrap')
 					var response_code_wrap = $('.response pre.code-wrap')
 					request_code_wrap.text(request_data_str)
